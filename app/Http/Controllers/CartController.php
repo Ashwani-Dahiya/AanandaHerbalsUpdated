@@ -24,9 +24,6 @@ class CartController extends Controller
         }
     }
 
-
-
-
     public function add_to_cart($id)
     {
         $user = User::find(Auth::user()->id);
@@ -34,27 +31,24 @@ class CartController extends Controller
 
         // Check if the product is already in the cart
         $cart = $user->carts()->where('product_id', $product_id)->first();
-$times = 0;
+        $times = 0;
         if ($cart) {
             // If the product is already in the cart, update the quantity
             $cart->increment('times'); // You can customize this based on your needs
-            $cart = $user->carts()->where('product_id', $product_id)->first();
-            $times=$cart->times;
+
+            $times = $cart->times;
         } else {
             // If the product is not in the cart, add a new item
             $cart = new CartModel();
             $cart->user_id = $user->id;
             $cart->product_id = $product_id;
             $cart->save();
-           $times=1;
+            $times = 1;
         }
-
-
-
-
+        $cart = $user->carts()->where('product_id', $product_id)->first();
         $data = [
             'success' => true,
-            'item_id' => $times,
+            'times' => $times,
             // any other data you want to include
         ];
 
@@ -96,5 +90,16 @@ $times = 0;
             return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
         }
     }
+    public function cart_count()
+    {
+        if (Auth::check()) {
+            $user = Auth::user();
+            $cartCount = CartModel::where('user_id', $user->id)->count();
+            return response()->json(['success' => true, 'cartCount' => $cartCount]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'User is not authenticated']);
+        }
+    }
+
 
 }

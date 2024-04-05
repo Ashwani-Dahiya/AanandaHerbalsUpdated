@@ -38,21 +38,9 @@
     </div>
 </section>
 
-@if (session('success'))
-<div class="cr-wish-notify" id="wishNotification">
-    <p class="wish-note">Add product in <a href="{{ route('cart.page') }}"> Cart</a> Successfully!</p>
-</div>
 
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script>
-    $(document).ready(function() {
-        setTimeout(function() {
-            $("#wishNotification").fadeOut(300);
-        }, 2000);
-    });
 
-</script>
-@endif
+
 
 
 <!-- Popular product -->
@@ -107,8 +95,8 @@
                         </a>
                         @if (Auth::user())
                             <div class="cr-last-buttons mt-4 d-flex boder boder-dark gap-2 justify-content-center align-items-center">
-                                <a href="{{ route('add.cart', ['id' => $items->id]) }}" product_id='{{ $items->id }}' class="cr-button col-md-5 add_to_card" style="font-size: 10px">
-                                    Add cart
+                                <a href="#" class="cr-button col-md-5 addToCartBtn" data-id="{{ $items->id }}" style="font-size: 10px">
+                                    Add Cart
                                 </a>
                                 <a href="{{ route('buy.now', ['id' => $items->id]) }}" class="cr-button col-md-5" style="font-size: 10px">
                                     Buy now
@@ -136,6 +124,8 @@
     </div>
     </div>
 </section>
+
+
 
 
 
@@ -181,8 +171,8 @@
                                 </div>
                                 @if (Auth::user())
                                 <div class="cr-last-buttons mt-4 d-flex boder boder-dark gap-2 justify-content-center align-items-center">
-                                    <a href="{{ route('add.cart', ['id' => $product->id]) }}" class="cr-button col-md-5" style="font-size: 10px">
-                                        Add cart
+                                    <a href="#" class="cr-button col-md-5 addToCartBtn" data-id="{{ $product->id }}" style="font-size: 10px">
+                                        Add Cart
                                     </a>
                                     <a href="{{ route('buy.now', ['id' => $product->id]) }}" class="cr-button col-md-5" style="font-size: 10px">
                                         Buy now
@@ -209,17 +199,6 @@
     </div>
 </section>
 @endforeach
-
-<script>
-    $(".add_to_cart").click(function(e){
-        e.preventDefault();
-      product_id= $(this).attr("product_id");
-      link= $(this).attr("href");
-$.post(/,  )
-
-    });
-</script>
-
 
 
 
@@ -479,5 +458,6 @@ $.post(/,  )
     </div>
 </section>
 @endsection
+
 
 

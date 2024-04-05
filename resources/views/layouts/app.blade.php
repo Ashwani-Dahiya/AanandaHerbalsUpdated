@@ -27,6 +27,8 @@
     <link rel="stylesheet" href="{{ asset('css/vendor/slick-theme.css') }}">
     <!-- Main CSS -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
 </head>
 
@@ -88,11 +90,10 @@
                                     </ul>
                                 </li>
                             </ul>
-                            <a href="{{ route('cart.page') }}" class="cr-right-bar-item">
+                            <a href="{{ route('cart.page') }}" class="cr-right-bar-item" id="cartLink">
                                 <i class="ri-shopping-cart-line"></i>
                                 <span>Cart</span>
-                                <span class="position-absolute start-100 badge bg-danger text-white" style="top: 1.1rem; border-radius: 50px; font-size: 14px; display: {{ $cartCount > 0 ? 'inline-block' : 'none' }}">
-                                    @if ($cartCount < 10) {{ $cartCount }} @else 9+ @endif </span>
+                                <span class="position-absolute start-100 badge bg-danger text-white" id="cartBadge" style="top: 1.1rem; border-radius: 50px; font-size: 14px; display: none;"></span>
                             </a>
                         </div>
                         @else
@@ -310,13 +311,14 @@
                         </div> --}}
                     </div>
                     <style>
-                        #navmob{
+                        #navmob {
                             /* background-color: rgba(255, 255, 255, 0.922); */
                             padding: 5px;
                             margin: 17px 0px;
                         }
+
                     </style>
-                    <nav class="navbar navbar-expand-lg" >
+                    <nav class="navbar navbar-expand-lg">
                         <a href="javascript:void(0)" class="navbar-toggler shadow-none">
                             <i class="ri-menu-3-line"></i>
                         </a>
@@ -362,11 +364,25 @@
                             @endif
 
                             @if (Auth::user())
-                            <a href="/cart" class="cr-right-bar-item">
+                            <a href="{{ route('cart.page') }}" class="cr-right-bar-item" id="cartLink">
                                 <i class="ri-shopping-cart-line"></i>
-                                <span id="cartBadge" style="position: absolute; left: 92%; top: 1.2rem; background-color: #dc3545; color: #fff; border-radius: 50%; font-size: 10px; padding: 2px 6px; display: {{ $cartCount > 0 ? 'inline-block' : 'none' }}">
+                                <span id="cartBadge" style="
+                                position: absolute;
+                                left: 95%;
+                                top: 1.2rem;
+                                background-color: #dc3545;
+                                color: #fff;
+                                border-radius: 50%;
+                                font-size: 8px;
+                                padding: 2px 5px;
+                                display: inline-block; display: {{ $cartCount > 0 ? 'inline-block' : 'none' }}">
                                     @if ($cartCount < 10) {{ $cartCount }} @else 9+ @endif </span>
                             </a>
+                            {{-- <a href="{{ route('cart.page') }}" class="cr-right-bar-item" id="cartLink">
+                                <i class="ri-shopping-cart-line"></i>
+                                <span>Cart</span>
+                                <span class="position-absolute start-100 badge bg-danger text-white" id="cartBadge" style="top: 1.1rem; border-radius: 50px; font-size: 14px; display: none;"></span>
+                            </a> --}}
                             @else
                             <a href="{{ route('login') }}" class="cr-right-bar-item">
                                 <i class="ri-shopping-cart-line"></i>
@@ -603,4 +619,5 @@
         </div>
     </div>
     @yield('content')
+    @extends('layouts.js')
     @extends('layouts.footer')

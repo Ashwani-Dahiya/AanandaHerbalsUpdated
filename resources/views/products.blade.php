@@ -63,8 +63,8 @@
                     </div>
                     @if (Auth::user())
                     <div class="cr-last-buttons mt-4 d-flex boder boder-dark gap-2 justify-content-center align-items-center">
-                        <a href="{{ route('add.cart', ['id' => $newlist->id]) }}" class="cr-button col-md-5" style="font-size: 10px">
-                            Add cart
+                        <a href="#" class="cr-button col-md-5 addToCartBtn" data-id="{{ $newlist->id }}" style="font-size: 10px">
+                            Add Cart
                         </a>
                         <a href="{{ route('buy.now', ['id' => $newlist->id]) }}" class="cr-button col-md-5" style="font-size: 10px">
                             Buy now

@@ -33,7 +33,7 @@ class AuthController extends Controller
             $newbrand = BrandModel::orderBy("id", "desc")->paginate(10);
             $review = ReviewModel::orderBy("id", "desc")->paginate(10);
             $categorie = CategorieModel::orderBy("id", "desc")->paginate(10);
-            $count = $this->item_count();
+            // $count = $this->item_count();
             $banner= HomeMainBannerModel::all();
             $midbanners=HomeMiddleBannerModel::orderBy("id", "asc")->paginate(1);
             $lastbanners=HomeLastBannerModel::orderBy("id", "asc")->paginate(1);
@@ -54,7 +54,17 @@ class AuthController extends Controller
             ]);
         }
     }
-
+    public function item_count()
+    {
+        // Check if the user is authenticated
+        if (Auth::check()) {
+            $rec = CartModel::where('user_id', Auth::user()->id)->count();
+            return $rec;
+        } else {
+            // If the user is not authenticated, return 0 or handle it as needed
+            return 0;
+        }
+    }
     public function update_profile_page()
     {
         $states = StateModel::with('cities')->get();
@@ -132,17 +142,7 @@ class AuthController extends Controller
         Auth::logout();
         return redirect('login')->with('success', 'Logout Successfully');
     }
-    public function item_count()
-    {
-        // Check if the user is authenticated
-        if (Auth::check()) {
-            $rec = CartModel::where('user_id', Auth::user()->id)->count();
-            return $rec;
-        } else {
-            // If the user is not authenticated, return 0 or handle it as needed
-            return 0;
-        }
-    }
+
     public function delete_cart_item($id)
     {
         try {

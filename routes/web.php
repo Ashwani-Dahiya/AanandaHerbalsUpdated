@@ -53,7 +53,7 @@ Route::get('/shop', [ProductController::class, 'shop']);
 Route::get('/product-detail/{id}', [ProductController::class, 'more'])->name('more.detail');
 Route::post('/message-send', [ContactController::class, 'save'])->name('data.send');
 Route::get('/get-cities/{stateId}', [UserController::class, 'getCities'])->name('getCities');
-
+Route::get('/cart/count', [CartController::class, 'cart_count'])->name('cart.count');
 
 
 
@@ -92,6 +92,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::put('/update-cart-quantity', [CartController::class, 'update_quantity'])->name('update.cart.quantity');
     Route::post('/user/cancel-order/{id}', [OrderController::class, 'user_cancel_order'])->name('user.cancel.order');
     Route::get('/user/view-order/{id}', [OrderController::class, 'user_view_order_details'])->name('user.view.order.details');
+
 });
 
 
