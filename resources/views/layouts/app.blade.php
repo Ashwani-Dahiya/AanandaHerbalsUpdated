@@ -8,6 +8,7 @@
     <meta name="keywords" content="ecommerce, market, shop, mart, cart, deal, multipurpose, marketplace">
     <meta name="description" content="Carrot - Multipurpose eCommerce HTML Template.">
     <meta name="author" content="ashishmaraviya">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $web_title }}</title>
     <!-- App favicon -->
     <link rel="shortcut icon" href="{{ asset('img/logo/newfavicon1.png') }}">
@@ -28,7 +29,18 @@
     <!-- Main CSS -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+    <style>
+        #mobcartBadge{
+            position: relative;
+    display: inline-block;
+    top: -19px;
+    bottom: 10px;
+    right: 22px;
+    border-radius: 50%;
+    padding: 2px 4px;
+    font-size: 10px;
+        }
+    </style>
 
 </head>
 
@@ -93,7 +105,8 @@
                             <a href="{{ route('cart.page') }}" class="cr-right-bar-item" id="cartLink">
                                 <i class="ri-shopping-cart-line"></i>
                                 <span>Cart</span>
-                                <span class="position-absolute start-100 badge bg-danger text-white" id="cartBadge" style="top: 1.1rem; border-radius: 50px; font-size: 14px; display: none;"></span>
+                                <span class="position-absolute badge bg-danger text-white" id="cartBadge" style=" border-radius: 50%; font-size: 11px; display: none;padding: 1px 5px; left:94.5%;
+                                top: 28px;"></span>
                             </a>
                         </div>
                         @else
@@ -364,25 +377,17 @@
                             @endif
 
                             @if (Auth::user())
+                            {{-- <a href="{{ route('cart.page') }}" class="cr-right-bar-item" id="cartLink">
+                            <i class="ri-shopping-cart-line"></i>
+                            <span id="cartBadge" class="cart-badge"></span>
+                            </a> --}}
                             <a href="{{ route('cart.page') }}" class="cr-right-bar-item" id="cartLink">
                                 <i class="ri-shopping-cart-line"></i>
-                                <span id="cartBadge" style="
-                                position: absolute;
-                                left: 95%;
-                                top: 1.2rem;
-                                background-color: #dc3545;
-                                color: #fff;
-                                border-radius: 50%;
-                                font-size: 8px;
-                                padding: 2px 5px;
-                                display: inline-block; display: {{ $cartCount > 0 ? 'inline-block' : 'none' }}">
-                                    @if ($cartCount < 10) {{ $cartCount }} @else 9+ @endif </span>
+                                <span class="badge bg-danger text-white cart-badge" id="mobcartBadge"></span>
                             </a>
-                            {{-- <a href="{{ route('cart.page') }}" class="cr-right-bar-item" id="cartLink">
-                                <i class="ri-shopping-cart-line"></i>
-                                <span>Cart</span>
-                                <span class="position-absolute start-100 badge bg-danger text-white" id="cartBadge" style="top: 1.1rem; border-radius: 50px; font-size: 14px; display: none;"></span>
-                            </a> --}}
+
+
+
                             @else
                             <a href="{{ route('login') }}" class="cr-right-bar-item">
                                 <i class="ri-shopping-cart-line"></i>

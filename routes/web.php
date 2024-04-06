@@ -54,7 +54,7 @@ Route::get('/product-detail/{id}', [ProductController::class, 'more'])->name('mo
 Route::post('/message-send', [ContactController::class, 'save'])->name('data.send');
 Route::get('/get-cities/{stateId}', [UserController::class, 'getCities'])->name('getCities');
 Route::get('/cart/count', [CartController::class, 'cart_count'])->name('cart.count');
-
+Route::put('/cart/update_quantity', [CartController::class, 'updateQuantity'])->name('cart.update.quantity');
 
 
 Route::group(
@@ -89,9 +89,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/user-change-password', [UserController::class, 'change_password_page'])->name('change.password.page');
     Route::post('/add-to-order-item/', [OrderController::class, 'add_into_order_item'])->name('add.to.orderItem');
     Route::get('/thankyou/{order_id}', [OrderController::class, 'thankYouPage'])->name('thankyou');
-    Route::put('/update-cart-quantity', [CartController::class, 'update_quantity'])->name('update.cart.quantity');
     Route::post('/user/cancel-order/{id}', [OrderController::class, 'user_cancel_order'])->name('user.cancel.order');
     Route::get('/user/view-order/{id}', [OrderController::class, 'user_view_order_details'])->name('user.view.order.details');
+
 
 });
 
@@ -113,43 +113,42 @@ Route::middleware(['admin'])->group(function () {
     Route::post('admin/add-last-banner', [BannersController::class, 'insert_last_banner'])->name('adm.insert.lastbanner');
     Route::post('admin/update-last-banner/{id}', [BannersController::class, 'update_last_banner'])->name('adm.update.last.banner');
     Route::post('admin/del-last-banner/{id}', [BannersController::class, 'delete_last_banner'])->name('adm.del.last.banner');
-    Route::get('admin/create-offers',[OffersController::class,'offers_page'])->name('adm.offer.page');
-    Route::post('admin/add-offer',[OffersController::class,'add_offer'])->name('adm.add.offer');
-    Route::post('admin/update-offer/{id}',[OffersController::class,'update_offer'])->name('adm.update.offer');
-    Route::get('admin/ratings',[RatingController::class,'rating_page'])->name('adm.rating.page');
-    Route::post('admin/del-rating/{id}',[RatingController::class,'delete_rating'])->name('adm.del.rating');
-    Route::get('admin/sections',[SectionController::class,'section_page'])->name('adm.home.section.page');
-    Route::post('admin/add-sections',[SectionController::class,'add_section'])->name('adm.add.section');
-    Route::post('admin/add-sections/{id}',[SectionController::class,'delete_section'])->name('adm.del.section');
-    Route::post('admin/update-sections/{id}',[SectionController::class,'update_section'])->name('adm.update.section');
-    Route::get('admin/assignproducts',[SectionController::class,'assign_product_page'])->name('adm.assign.section.page');
-    Route::post('admin/assign-product',[SectionController::class,'assign_product'])->name('adm.assign.product');
-    Route::get('admin/add-category',[CategoryController::class,'add_categoty_page'])->name('adm.add.category.page');
-    Route::post('admin/add-category',[CategoryController::class,'add_categoty'])->name('adm.add.category');
-    Route::get('admin/all-category-list',[CategoryController::class,'all_categoty_page'])->name('adm.all.category.page');
-    Route::post('admin/update-category/{id}',[CategoryController::class,'update_category'])->name('adm.update.category');
-    Route::post('admin/del-category/{id}',[CategoryController::class,'delete_category'])->name('adm.del.category');
-    Route::get('admin/all-brands',[BrandController::class,'all_brand_page'])->name('adm.all.brands.page');
-    Route::post('admin/add-brand',[BrandController::class,'add_brand'])->name('adm.add.brand');
-    Route::post('admin/update-brand/{id}',[BrandController::class,'update_brand'])->name('adm.update.brand');
-    Route::get('admin/all-products-list',[ProductController::class,'all_products_page'])->name('adm.all.products.page');
-    Route::get('admin/add-product-page',[ProductController::class,'add_products_page'])->name('adm.add.product.page');
-    Route::post('admin/add-product',[ProductController::class,'add_products'])->name('adm.add.product');
-    Route::post('admin/delete-product/{id}',[ProductController::class,'delete_product'])->name('adm.del.product');
-    Route::get('admin/all-orders-page',[OrderController::class,'all_order_page'])->name('adm.all.order.page');
-    Route::post('admin/update-order-status/{id}',[OrderController::class,'update_status'])->name('adm.update.order.status');
-    Route::post('admin/view-order/{id}',[OrderController::class,'view_order'])->name('adm.view.order');
-    Route::get('admin/date-wise-order',[OrderController::class,'datewise_order_page'])->name('adm.datewise.order.page');
-    Route::get('admin/blog-page',[BlogController::class,'blog_page'])->name('adm.blog.page');
-    Route::post('admin/blog-page',[BlogController::class,'add_blog'])->name('adm.insert.blog');
-    Route::post('admin/update-blog-page/{id}',[BlogController::class,'update_blog_page'])->name('adm.update.blog.page');
-    Route::post('admin/update-blog/{id}',[BlogController::class,'update_blog'])->name('adm.update.blog');
-    Route::post('admin/delete-blog/{id}',[BlogController::class,'delete_blog'])->name('adm.del.blog');
-    Route::get('admin/update-company-detail',[CompanyDetailsController::class,'update_detail_page'])->name('adm.company.detail.page');
-    Route::post('admin/update-company-detail',[CompanyDetailsController::class,'update_company_detail'])->name('adm.update.company.details');
+    Route::get('admin/create-offers', [OffersController::class, 'offers_page'])->name('adm.offer.page');
+    Route::post('admin/add-offer', [OffersController::class, 'add_offer'])->name('adm.add.offer');
+    Route::post('admin/update-offer/{id}', [OffersController::class, 'update_offer'])->name('adm.update.offer');
+    Route::get('admin/ratings', [RatingController::class, 'rating_page'])->name('adm.rating.page');
+    Route::post('admin/del-rating/{id}', [RatingController::class, 'delete_rating'])->name('adm.del.rating');
+    Route::get('admin/sections', [SectionController::class, 'section_page'])->name('adm.home.section.page');
+    Route::post('admin/add-sections', [SectionController::class, 'add_section'])->name('adm.add.section');
+    Route::post('admin/add-sections/{id}', [SectionController::class, 'delete_section'])->name('adm.del.section');
+    Route::post('admin/update-sections/{id}', [SectionController::class, 'update_section'])->name('adm.update.section');
+    Route::get('admin/assignproducts', [SectionController::class, 'assign_product_page'])->name('adm.assign.section.page');
+    Route::post('admin/assign-product', [SectionController::class, 'assign_product'])->name('adm.assign.product');
+    Route::get('admin/add-category', [CategoryController::class, 'add_categoty_page'])->name('adm.add.category.page');
+    Route::post('admin/add-category', [CategoryController::class, 'add_categoty'])->name('adm.add.category');
+    Route::get('admin/all-category-list', [CategoryController::class, 'all_categoty_page'])->name('adm.all.category.page');
+    Route::post('admin/update-category/{id}', [CategoryController::class, 'update_category'])->name('adm.update.category');
+    Route::post('admin/del-category/{id}', [CategoryController::class, 'delete_category'])->name('adm.del.category');
+    Route::get('admin/all-brands', [BrandController::class, 'all_brand_page'])->name('adm.all.brands.page');
+    Route::post('admin/add-brand', [BrandController::class, 'add_brand'])->name('adm.add.brand');
+    Route::post('admin/update-brand/{id}', [BrandController::class, 'update_brand'])->name('adm.update.brand');
+    Route::get('admin/all-products-list', [ProductController::class, 'all_products_page'])->name('adm.all.products.page');
+    Route::get('admin/add-product-page', [ProductController::class, 'add_products_page'])->name('adm.add.product.page');
+    Route::post('admin/add-product', [ProductController::class, 'add_products'])->name('adm.add.product');
+    Route::post('admin/delete-product/{id}', [ProductController::class, 'delete_product'])->name('adm.del.product');
+    Route::get('admin/all-orders-page', [OrderController::class, 'all_order_page'])->name('adm.all.order.page');
+    Route::post('admin/update-order-status/{id}', [OrderController::class, 'update_status'])->name('adm.update.order.status');
+    Route::post('admin/view-order/{id}', [OrderController::class, 'view_order'])->name('adm.view.order');
+    Route::get('admin/date-wise-order', [OrderController::class, 'datewise_order_page'])->name('adm.datewise.order.page');
+    Route::get('admin/blog-page', [BlogController::class, 'blog_page'])->name('adm.blog.page');
+    Route::post('admin/blog-page', [BlogController::class, 'add_blog'])->name('adm.insert.blog');
+    Route::post('admin/update-blog-page/{id}', [BlogController::class, 'update_blog_page'])->name('adm.update.blog.page');
+    Route::post('admin/update-blog/{id}', [BlogController::class, 'update_blog'])->name('adm.update.blog');
+    Route::post('admin/delete-blog/{id}', [BlogController::class, 'delete_blog'])->name('adm.del.blog');
+    Route::get('admin/update-company-detail', [CompanyDetailsController::class, 'update_detail_page'])->name('adm.company.detail.page');
+    Route::post('admin/update-company-detail', [CompanyDetailsController::class, 'update_company_detail'])->name('adm.update.company.details');
     Route::post('/cart/update_quantity', 'CartController@updateQuantity')->name('cart.update_quantity');
-    Route::get('/admin/redirect/page',[AdminControler::class,'redirect_page'])->name('redirect.page');
-
+    Route::get('/admin/redirect/page', [AdminControler::class, 'redirect_page'])->name('redirect.page');
 });
 
 

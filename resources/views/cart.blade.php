@@ -68,35 +68,34 @@
                             </thead>
                             <tbody>
                                 @foreach ($carts as $cart)
-    <tr>
-        @if($cart->product)
-            <td class="cr-cart-name">
-                <a href="javascript:void(0)">
-                    <img src="{{ asset('uploads/Products Images/'.$cart->product->image) }}" alt="product-1" class="cr-cart-img">
-                </a>
-            </td>
-            <td class="cr-cart-name">{{ $cart->product->name }}</td>
-            <td class="cr-cart-price"><span>{{ $cart->product->model }}</span></td>
-            <td class="cr-cart-price"><span class="amount">₹{{ $cart->product->discounted_price }}</span></td>
-            <td class="cr-cart-qty">
-                <div class="cart-qty-plus-minus">
-                    <button type="button" class="minus" data-id="{{ $cart->id }}">-</button>
-                    <input type="text" data-id="{{ $cart->product->id }}" class="quantity" value="{{ $cart->times }}" readonly name="times[]">
-                    <button type="button" class="plus" data-id="{{ $cart->id }}">+</button>
-                </div>
-            </td>
-            <td class="cr-cart-subtotal">₹{{ $cart->product->discounted_price * $cart->times }}</td>
-            <td class="cr-cart-remove">
-                <a href="{{ route('delete.card.item', ['id' => $cart->id]) }}">
-                    <i class="ri-delete-bin-line"></i>
-                </a>
-            </td>
-        @else
-            <td colspan="7">Product not found</td>
-        @endif
-    </tr>
-@endforeach
-
+                                <tr>
+                                    @if($cart->product)
+                                    <td class="cr-cart-name">
+                                        <a href="javascript:void(0)">
+                                            <img src="{{ asset('uploads/Products Images/'.$cart->product->image) }}" alt="product-1" class="cr-cart-img">
+                                        </a>
+                                    </td>
+                                    <td class="cr-cart-name">{{ $cart->product->name }}</td>
+                                    <td class="cr-cart-price"><span>{{ $cart->product->model }}</span></td>
+                                    <td class="cr-cart-price"><span class="amount">₹{{ $cart->product->discounted_price }}</span></td>
+                                    <td class="cr-cart-qty">
+                                        <div class="cart-qty-plus-minus">
+                                            <button type="button" class="newminus" data-cart-id="{{ $cart->id }}" data-product-id="{{ $cart->product->id }}">-</button>
+                                            <input type="text" class="quantity" value="{{ $cart->times }}" readonly>
+                                            <button type="button" class="newplus" data-cart-id="{{ $cart->id }}" data-product-id="{{ $cart->product->id }}">+</button>
+                                        </div>
+                                    </td>
+                                    <td class="cr-cart-subtotal">{{ $cart->product->discounted_price }}</td>
+                                    <td class="cr-cart-remove">
+                                        <a href="{{ route('delete.card.item', ['id' => $cart->id]) }}">
+                                            <i class="ri-delete-bin-line"></i>
+                                        </a>
+                                    </td>
+                                    @else
+                                    <td colspan="7">Product not found</td>
+                                    @endif
+                                </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -115,8 +114,6 @@
         <div class="row">
             <div class="col-lg-12">
                 <p>No items in the cart</p>
-
-
             </div>
         </div>
         @endif
@@ -132,67 +129,58 @@
         @endisset
     </div>
 </section>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
     $(document).ready(function() {
-        $(".plus").click(function() {
-            var row = $(this).closest("tr");
-            var price = parseFloat(row.find(".cr-cart-price .amount").text().replace("₹", ""));
-            var quantityInput = row.find(".quantity");
-            var quantity = parseInt(quantityInput.val()) + 1;
-
-            $.ajax({
-                url: "/cart/update_quantity"
-                , method: "POST"
-                , data: {
-                    _token: "{{ csrf_token() }}"
-                    , cart_id: $(this).data("id")
-                    , quantity: quantity
-                }
-                , success: function(response) {
-                    if (response.success) {
-                        quantityInput.val(quantity);
-                        updateSubtotal(row, price, quantity);
-                        updateTotalPrice();
-                    } else {
-                        alert("Failed to update quantity.");
-                    }
-                }
-                , error: function(xhr, status, error) {
-                    console.error(xhr.responseText);
-                }
-            });
-        });
-
-        $(".minus").click(function() {
-            var row = $(this).closest("tr");
-            var price = parseFloat(row.find(".cr-cart-price .amount").text().replace("₹", ""));
-            var quantityInput = row.find(".quantity");
-            var quantity = parseInt(quantityInput.val());
-            if (quantity > 1) {
-                quantityInput.val(quantity - 1);
-                updateSubtotal(row, price, quantity - 1);
-                updateTotalPrice();
+    $(".newplus, .newminus").click(function() {
+        var element = $(this);
+        var cartId = $(this).data("cart-id");
+        var productId = $(this).data("product-id");
+        var increment = $(this).hasClass("newplus") ? 1 : -1;
+        // Add CSRF token to headers
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
 
-        // Function to update subtotal for a row
-        function updateSubtotal(row, price, quantity) {
-            var subtotal = price * quantity;
-            row.find(".cr-cart-subtotal").text("₹" + subtotal.toFixed(0));
-        }
+        // AJAX request
+        $.ajax({
+            url: "{{ route('cart.update.quantity') }}",
+            type: 'put',
+            dataType: 'json',
+            data: {
+                cart_id: cartId,
+                product_id: productId,
+                increment: increment,
+            },
+            success: function(response) {
+                // Handle successful response
+                console.log(response);
 
-        // Function to update total price
-        function updateTotalPrice() {
-            var total = 0;
-            $(".cr-cart-subtotal").each(function() {
-                var subtotal = parseFloat($(this).text().replace("₹", ""));
-                total += subtotal;
-            });
-            $("#total_price").text("₹" + total.toFixed(0));
-        }
+                // Check if the update was successful
+                if (response.success) {
+                    var times= response.times;
+                    var price= response.price;
+                    $('.quantity').val(times);
+                    $('.cr-cart-subtotal').text(times * price);
+                } else {
+                    console.error("Update quantity failed:", response.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                // Handle errors
+                console.error("AJAX error:", xhr.responseText);
+            }
+        });
     });
+});
 
 </script>
+
+
+
+
+
+
+
 @endsection
