@@ -81,11 +81,11 @@
                                     <td class="cr-cart-qty">
                                         <div class="cart-qty-plus-minus">
                                             <button type="button" class="newminus" data-cart-id="{{ $cart->id }}" data-product-id="{{ $cart->product->id }}">-</button>
-                                            <input type="text" class="quantity" value="{{ $cart->times }}" readonly>
+                                            <input type="text" id="quantity_{{ $cart->id }}" value="{{ $cart->times }}" readonly>
                                             <button type="button" class="newplus" data-cart-id="{{ $cart->id }}" data-product-id="{{ $cart->product->id }}">+</button>
                                         </div>
                                     </td>
-                                    <td class="cr-cart-subtotal">{{ $cart->product->discounted_price }}</td>
+                                    <td class="cr-cart-subtotal" id="subtotal_{{ $cart->id }}">₹{{ $cart->times * $cart->product->price }}</td>
                                     <td class="cr-cart-remove">
                                         <a href="{{ route('delete.card.item', ['id' => $cart->id]) }}">
                                             <i class="ri-delete-bin-line"></i>
@@ -131,56 +131,53 @@
 </section>
 <script>
     $(document).ready(function() {
-    $(".newplus, .newminus").click(function() {
-        var element = $(this);
-        var cartId = $(this).data("cart-id");
-        var productId = $(this).data("product-id");
-        var increment = $(this).hasClass("newplus") ? 1 : -1;
-        // Add CSRF token to headers
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
+        $(".newplus, .newminus").click(function() {
+            var element = $(this);
+            var cartId = $(this).data("cart-id");
+            var productId = $(this).data("product-id");
+            var increment = $(this).hasClass("newplus") ? 1 : -1;
 
-        // AJAX request
-        $.ajax({
-            url: "{{ route('cart.update.quantity') }}",
-            type: 'put',
-            dataType: 'json',
-            data: {
-                cart_id: cartId,
-                product_id: productId,
-                increment: increment,
-            },
-            success: function(response) {
-                // Handle successful response
-                console.log(response);
-
-                // Check if the update was successful
-                if (response.success) {
-                    var times= response.times;
-                    var price= response.price;
-                    $('.quantity').val(times);
-                    $('.cr-cart-subtotal').text(times * price);
-                } else {
-                    console.error("Update quantity failed:", response.message);
+            // Add CSRF token to headers
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
-            },
-            error: function(xhr, status, error) {
-                // Handle errors
-                console.error("AJAX error:", xhr.responseText);
-            }
+            });
+
+            // AJAX request
+            $.ajax({
+                url: "{{ route('cart.update.quantity') }}",
+                type: 'put',
+                dataType: 'json',
+                data: {
+                    cart_id: cartId,
+                    product_id: productId,
+                    increment: increment,
+                },
+                success: function(response) {
+                    // Handle successful response
+                    console.log(response);
+
+                    // Check if the update was successful
+                    if (response.success) {
+                        var times = response.times;
+                        var price = response.price;
+
+                        // Update quantity input using ID
+                        $('#quantity_' + cartId).val(times);
+
+                        // Update subtotal using ID
+                        $('#subtotal_' + cartId).text("₹" + (times * price));
+                    } else {
+                        console.error("Update quantity failed:", response.message);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // Handle errors
+                    console.error("AJAX error:", xhr.responseText);
+                }
+            });
         });
     });
-});
-
-</script>
-
-
-
-
-
-
-
+    </script>
 @endsection

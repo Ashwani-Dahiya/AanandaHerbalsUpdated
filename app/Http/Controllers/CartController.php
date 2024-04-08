@@ -80,10 +80,11 @@ class CartController extends Controller
 
     public function updateQuantity(Request $request)
     {
-        // Retrieve the cart item
-        $cart = CartModel::where('id', $request->cart_id)
-            ->where('product_id', $request->product_id)
-            ->first();
+        $user_id = Auth::user()->id;
+$cart = CartModel::where('id', $request->cart_id)
+                 ->where('user_id', $user_id) 
+                 ->orWhere('product_id', $request->product_id)
+                 ->first();
             $product = ProductModel::findOrFail($request->product_id);
             $price=$product->discounted_price;
         if ($cart) {
