@@ -18,8 +18,7 @@ use App\Http\Controllers\OffersController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\UserController;
-
-
+use App\Http\Controllers\ForgotPasswordController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -41,6 +40,9 @@ Route::get('/about-us', function () {
 Route::get('/contact-us', function () {
     return view('contact-us');
 })->name('contact.us');
+Route::get('/admin', [AdminControler::class, 'login_page'])->name('adm.login.page');
+
+Route::post('/admin/login', [AdminControler::class, 'login'])->name('adm.login');
 
 Route::post('/filterprice', [HomeController::class, 'filter_search'])->name('filter.by.price');
 Route::get('/', [AuthController::class, 'home'])->name('home');
@@ -64,8 +66,11 @@ Route::group(
         Route::post('login', [AuthController::class, 'login'])->name('login');
         Route::get('register', [AuthController::class, 'register_page'])->name('register');
         Route::post('register', [AuthController::class, 'register'])->name('register');
-        Route::get('/forgot-password', [AuthController::class, 'forgot_password_page'])->name('forgot.password.page');
-        Route::post('/forgot-password-sumit', [AuthController::class, 'forgot_password'])->name('forgot.password');
+        Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.page');
+        Route::post('forget-password-post', [ForgotPasswordController::class, 'sendPasswordResetEmail'])->name('forget.password.post');
+        Route::post('very-user-otp', [ForgotPasswordController::class, 'verify_otp'])->name('verify.otp.post');
+        Route::get('very-user-otp', [ForgotPasswordController::class, 'verify_otp_page'])->name('verify.otp');
+        Route::post('new-password', [ForgotPasswordController::class, 'create_new_password'])->name('new.password.post');
     }
 );
 
@@ -91,8 +96,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/thankyou/{order_id}', [OrderController::class, 'thankYouPage'])->name('thankyou');
     Route::post('/user/cancel-order/{id}', [OrderController::class, 'user_cancel_order'])->name('user.cancel.order');
     Route::get('/user/view-order/{id}', [OrderController::class, 'user_view_order_details'])->name('user.view.order.details');
-
-
 });
 
 
@@ -150,9 +153,3 @@ Route::middleware(['admin'])->group(function () {
     Route::post('/cart/update_quantity', 'CartController@updateQuantity')->name('cart.update_quantity');
     Route::get('/admin/redirect/page', [AdminControler::class, 'redirect_page'])->name('redirect.page');
 });
-
-
-
-Route::get('/admin', [AdminControler::class, 'login_page'])->name('adm.login.page');
-
-Route::post('/admin/login', [AdminControler::class, 'login'])->name('adm.login');

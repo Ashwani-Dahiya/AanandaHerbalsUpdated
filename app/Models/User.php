@@ -29,6 +29,10 @@ class User extends Authenticatable
         'city',
         'post_code',
         'address',
+        'otp',
+        'status',
+        'otp_expire',
+        'simple_password'
     ];
 
     /**
