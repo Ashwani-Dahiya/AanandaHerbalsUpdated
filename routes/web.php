@@ -58,12 +58,22 @@ Route::get('/get-cities/{stateId}', [UserController::class, 'getCities'])->name(
 Route::get('/cart/count', [CartController::class, 'cart_count'])->name('cart.count');
 Route::put('/cart/update_quantity', [CartController::class, 'updateQuantity'])->name('cart.update.quantity');
 
+Route::get('login/with/facebook', [AuthController::class, 'facebook_login_page'])->name('login.with.facebook');
+        Route::get('/auth/facebook/callback', [AuthController::class, 'handlefacebookCallback'])->name('callback.facebook');
+
+
+
+
 
 Route::group(
     ['middleware' => 'guest'],
     function () {
         Route::get('login', [AuthController::class, 'login_page'])->name('login');
         Route::post('login', [AuthController::class, 'login'])->name('login');
+        Route::get('login/with/google', [AuthController::class, 'google_login_page'])->name('login.with.google');
+        Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('callback');
+        Route::get('login/with/linkedin', [AuthController::class, 'linkedin_login_page'])->name('login.with.linkedin');
+        Route::get('/auth/linkedin/callback', [AuthController::class, 'handleLinkedinCallback'])->name('callback.linkedin');
         Route::get('register', [AuthController::class, 'register_page'])->name('register');
         Route::post('register', [AuthController::class, 'register'])->name('register');
         Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.page');

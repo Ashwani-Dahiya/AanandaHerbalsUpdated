@@ -32,7 +32,8 @@ class User extends Authenticatable
         'otp',
         'status',
         'otp_expire',
-        'simple_password'
+        'simple_password',
+        'login_via'
     ];
 
     /**

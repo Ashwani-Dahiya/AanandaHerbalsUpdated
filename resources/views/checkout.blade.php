@@ -175,7 +175,7 @@ $formattedValue = number_format($deliveryCharges, 2);
 
                                             <span class="cr-bill-wrap cr-bill-half">
                                                 <label>First Name*</label>
-                                                <input type="text" value="{{ $user->first_name }}" name="first_name">
+                                                <input type="text" value="{{ $user->first_name }}" name="first_name" required>
                                             </span>
                                             <span class="cr-bill-wrap cr-bill-half">
                                                 <label>Last Name*</label>
@@ -183,19 +183,19 @@ $formattedValue = number_format($deliveryCharges, 2);
                                             </span>
                                             <span class="cr-bill-wrap cr-bill-half">
                                                 <label>Email*</label>
-                                                <input type="text" value="{{ $user->email }}" name="email">
+                                                <input type="text" value="{{ $user->email }}" name="email" required>
                                             </span>
                                             <span class="cr-bill-wrap cr-bill-half">
                                                 <label>Mobile Number*</label>
-                                                <input type="text" value="{{ $user->phone }}" name="phone">
+                                                <input type="text" value="{{ $user->phone }}" name="phone" required>
                                             </span>
                                             <span class="cr-bill-wrap">
                                                 <label>Address</label>
-                                                <input type="text" name="address" name="address">
+                                                <input type="text" name="address" name="address" required>
                                             </span>
                                             <span class="cr-bill-wrap cr-bill-half">
                                                 <label>Country *</label>
-                                                <input type="text" value="India" readonly>
+                                                <input type="text" value="India" readonly >
                                             </span>
 
                                             <span class="cr-bill-wrap cr-bill-half ">
@@ -223,7 +223,7 @@ $formattedValue = number_format($deliveryCharges, 2);
 
                                             <span class="cr-bill-wrap cr-bill-half">
                                                 <label>Area Pin Code</label>
-                                                <input type="number" class="form-control" name="post_code" style="height: 37px">
+                                                <input type="number" class="form-control" name="post_code" style="height: 37px" required>
                                             </span>
 
                                         </div>

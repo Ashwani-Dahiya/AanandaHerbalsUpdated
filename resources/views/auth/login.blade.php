@@ -18,8 +18,9 @@
 @if (session('success'))
 <script>
     window.onload = function() {
-            window.alert("{{session('success')  }}");
-        };
+        window.alert("{{session('success')  }}");
+    };
+
 </script>
 @endif
 <!-- Login -->
@@ -51,14 +52,12 @@
                         </div>
                         <div class="form-group">
                             <label>Email Address*</label>
-                            <input type="email" placeholder="Enter Your Email" class="cr-form-control" name="email"
-                                required>
+                            <input type="email" placeholder="Enter Your Email" class="cr-form-control" name="email" required>
                         </div>
 
                         <div class="form-group">
                             <label>Password*</label>
-                            <input type="password" placeholder="Enter Your password" class="cr-form-control"
-                                name="password" required>
+                            <input type="password" placeholder="Enter Your password" class="cr-form-control" name="password" required>
                         </div>
                         <div class="remember">
                             <span class="form-group custom">
@@ -74,34 +73,58 @@
                             </a>
                         </div>
                     </form>
+                    <style>
+                        #socialicons{
+                            border-radius:50%;
+                            width: 35px;
+                            padding: 2px;
+                        }
+                        #socialicons:hover{
+                            border: 1px solid rgb(219, 219, 219);
+                            background-color: rgba(245, 242, 242, 0.712);
+                        }
+                    </style>
+                    <div class="container mt-4 mb-2 p-4 text-center">
+                        <h6 class="h6 mb-4">Login with Google</h6>
+                        <div class="container d-flex justify-content-center align-items-center" style="flex-wrap: wrap">
+                            <a href="{{ route('login.with.google') }}">
+                                <img src="{{ asset('img/socialicons/google.png') }}" alt=""  id="socialicons">
+                            </a>
+                            {{-- <a href="{{ route('login.with.facebook') }}">
+                                <img src="{{ asset('img/socialicons/facebook.png') }}" alt=""  id="socialicons">
+                            </a>
+                            <a href="{{ route('login.with.linkedin') }}">
+                                <img src="{{ asset('img/socialicons/linkdin.png') }}" alt=""  id="socialicons">
+                            </a>
+                            <a href="{{ route('login.with.google') }}">
+                                <img src="{{ asset('img/socialicons/instagram.png') }}" alt=""  id="socialicons">
+                            </a> --}}
+                        </div>
 
-                    <!-- Add this element for displaying the error message -->
-
-
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 
 <script>
-    $(document).ready(function () {
-        $("#loginButton").on("click", function (event) {
+    $(document).ready(function() {
+        $("#loginButton").on("click", function(event) {
             event.preventDefault();
             var formData = new FormData($("#loginForm")[0]);
             var $message = $("#error-message");
 
             $.ajax({
-                type: "POST",
-                url: "{{ route('login') }}",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function (response) {
+                type: "POST"
+                , url: "{{ route('login') }}"
+                , data: formData
+                , contentType: false
+                , processData: false
+                , success: function(response) {
                     if (response.status) {
                         // Redirect to home page
                         window.location.href = "{{ route('login') }}";
@@ -109,14 +132,14 @@
                         // Display error message in the specified div
                         $message.text(response.msg || 'Invalid credentials. Please try again.');
                     }
-                },
-                error: function (error) {
+                }
+                , error: function(error) {
                     // Handle other errors
                     if (error.status === 422) {
                         var errors = error.responseJSON.errors;
                         var errorMessage = '';
 
-                        $.each(errors, function (key, value) {
+                        $.each(errors, function(key, value) {
                             errorMessage += value[0] + '<br>';
                         });
 
@@ -128,6 +151,7 @@
             });
         });
     });
+
 </script>
 
 

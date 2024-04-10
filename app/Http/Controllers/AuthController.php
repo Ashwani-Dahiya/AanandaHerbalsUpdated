@@ -19,6 +19,8 @@ use App\Models\HomeMiddleBannerModel;
 use App\Models\ReviewModel;
 use App\Models\SectionModel;
 use Exception;
+use Laravel\Socialite\Facades\Socialite;
+use Illuminate\Support\Facades\Http;
 
 class AuthController extends Controller
 {
@@ -34,11 +36,11 @@ class AuthController extends Controller
             $review = ReviewModel::orderBy("id", "desc")->paginate(10);
             $categorie = CategorieModel::orderBy("id", "desc")->paginate(10);
             // $count = $this->item_count();
-            $banner= HomeMainBannerModel::all();
-            $midbanners=HomeMiddleBannerModel::orderBy("id", "asc")->paginate(1);
-            $lastbanners=HomeLastBannerModel::orderBy("id", "asc")->paginate(1);
+            $banner = HomeMainBannerModel::all();
+            $midbanners = HomeMiddleBannerModel::orderBy("id", "asc")->paginate(1);
+            $lastbanners = HomeLastBannerModel::orderBy("id", "asc")->paginate(1);
 
-            return view("index", compact("blog", "item", "newbrand", "review", "categorie", "sections", "count","banner","midbanners","lastbanners"));
+            return view("index", compact("blog", "item", "newbrand", "review", "categorie", "sections", "count", "banner", "midbanners", "lastbanners"));
         } else {
             // Handle the case where no sections are found
             return view("index", [
@@ -235,6 +237,66 @@ class AuthController extends Controller
             return redirect()->back()->with('error', 'Check your username,email or phone');
         }
     }
+    public function google_login_page()
+    {
+        return Socialite::driver('google')->redirect();
+    }
+    public function handleGoogleCallback()
+    {
+        try {
+            $user = Socialite::driver('google')->user();
+            // Check if email is available
+            if ($user->email) {
+                $email = $user->email;
+                $findUser = User::where('email', $email)->first();
+
+                if ($findUser) {
+                    Auth::login($findUser);
+                    // Log in successful, redirect to home
+                    return redirect()->route('home');
+                } else {
+                    // If user doesn't exist, create a new user
+                    $newUser = User::create([
+                        'first_name' => $user->name,
+                        'email' => $user->email,
+                        'password' => Hash::make("123456"),
+                        'username' => $user->name,
+                        'simple_password' => '123456',
+                        'login_via' => "Google"
+                    ]);
+
+                    Auth::login($newUser);
+                    // New user created and logged in, redirect to home
+                    return redirect()->route('home');
+                }
+            } else {
+                // Handle the case where email is not available
+                throw new Exception('Email not provided by Google.');
+            }
+        } catch (Exception $e) {
+            dd($e->getMessage());
+        }
+    }
+
+    public function linkedin_login_page()
+    {
+        return Socialite::driver('linkedin')->redirect();
+    }
 
 
+    public function handleLinkedInCallback(Request $request)
+    {
+        $user = Socialite::driver('linkedin')->user();
+
+        dd($user);
+    }
+
+    public function facebook_login_page(){
+        return Socialite::driver('facebook')->redirect();
+    }
+    public function handleFacebookCallback(){
+        $user = Socialite::driver('facebook')->user();
+
+       dd($user);
+    }
 }
