@@ -37,7 +37,7 @@
                                         </tr>
                                         <tr>
                                             <th scope="row">Total Price</th>
-                                            <td>Rs. {{ $order->total_price }}</td>
+                                            <td>Rs. {{ $order->price_after_coupon }}</td>
                                         </tr>
                                         <tr>
                                             @if($order->order_status == 'delivered' || $order->order_status == 'cancelled')

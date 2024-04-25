@@ -119,7 +119,7 @@ $i = 0;
                                                                 </td>
                                                                 {{-- <td>{{ $item->discounted_price }}</td>
                                                                 <td>{{ $item->item_count }}</td> --}}
-                                                                <td>{{ $order->total_price}}
+                                                                <td>{{ $order->price_after_coupon}}
                                                                 </td>
                                                                 <td>
                                                                     @if ($order->user)
@@ -246,7 +246,7 @@ $i = 0;
                                                                 </td>
                                                                 {{-- <td>{{ $item->discounted_price }}</td>
                                                                 <td>{{ $item->item_count }}</td> --}}
-                                                                <td>{{ $order->total_price}}
+                                                                <td>{{ $order->price_after_coupon}}
                                                                 </td>
                                                                 <td>
                                                                     @if ($order->user)
@@ -372,7 +372,7 @@ $i = 0;
                                                                 </td>
                                                                 {{-- <td>{{ $item->discounted_price }}</td>
                                                                 <td>{{ $item->item_count }}</td> --}}
-                                                                <td>{{ $order->total_price}}
+                                                                <td>{{ $order->price_after_coupon}}
                                                                 </td>
                                                                 <td>
                                                                     @if ($order->user)
@@ -501,7 +501,7 @@ $i = 0;
                                                                     </td>
                                                                     {{-- <td>{{ $item->discounted_price }}</td>
                                                                     <td>{{ $item->item_count }}</td> --}}
-                                                                    <td>{{ $order->total_price}}
+                                                                    <td>{{ $order->price_after_coupon}}
                                                                     </td>
                                                                     <td>
                                                                         @if ($order->user)
@@ -587,7 +587,7 @@ $i = 0;
                                                                 </td>
                                                                 {{-- <td>{{ $item->discounted_price }}</td>
                                                                 <td>{{ $item->item_count }}</td> --}}
-                                                                <td>{{ $order->total_price}}
+                                                                <td>{{ $order->price_after_coupon}}
                                                                 </td>
                                                                 <td>
                                                                     @if ($order->user)

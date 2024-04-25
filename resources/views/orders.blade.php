@@ -55,13 +55,13 @@
                                                 {{ $order->order_num }}
                                             </td>
                                             <td class="cr-cart-price">
-                                                ₹ {{ $order->total_price }}
+                                                ₹ {{ $order->price_after_coupon }}
                                             </td>
                                             <td>
                                                 {{ $order->order_status }}
                                             </td>
                                             <td>
-                                                {{ optional($order->created_at)->format('d-m-Y g:i:s A') }}
+                                                {{ optional($order->created_at)->format('g:i:s A d-m-Y ') }}
                                             </td>
                                             <td>
                                                 <style>
@@ -81,14 +81,10 @@
                                                     @if ($order->order_status != 'cancelled' && $order->order_status != 'delivered')
                                                     <button type="button" class="button bg-danger text-white" data-bs-toggle="modal" data-bs-target="#myModal{{ $order->id }}">Cancel</button>
                                                     @endif
-
-
                                                 </div>
 
                                             </td>
                                         </tr>
-
-
                                         @endforeach
                                     </tbody>
                                 </table>

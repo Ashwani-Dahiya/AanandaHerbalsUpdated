@@ -14,13 +14,24 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderConfirmation;
+use Illuminate\Support\Facades\Log;
+use App\Models\CompanyDetailsModel;
+use App\Mail\SendNewsletterSubscriptionEmail;
+use App\Models\StateModel;
+use App\Models\CityModel;
+use App\Models\DiscountModel;
+use App\Models\NewsletterModel;
 
 class OrderController extends Controller
 {
     public function order_page()
     {
         $user = auth()->user();
-        $orders = OrderModel::where('user_id', $user->id)->get();
+        $orders = OrderModel::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
         $reasons = ReasonModel::all();
         return view('orders', compact('orders', 'reasons'));
     }
@@ -130,6 +141,34 @@ class OrderController extends Controller
     }
     public function add_into_order_item(Request $request)
     {
+        if ($request->price_after_coupan) {
+            $offer = DiscountModel::where('coupon_code', $request->code)->first();
+            $offerName = $offer->on_festival_name;
+            $offerPercentage = $offer->discount_percentage;
+            $offerCode = $offer->coupon_code;
+            $priceAfterCode = $request->price_after_coupan;
+        } else {
+            $offerName = NULL;
+            $offerCode = NULL;
+            $offerPercentage = NULL;
+            $priceAfterCode = $request->total_price;
+        }
+        $productNames = [];
+        $productQuantities = [];
+        $city = CityModel::where('id', $request->city)->first();
+        $cityName = $city->city;
+        $state = StateModel::where('id', $request->state)->first();
+        $stateName = $state->name;
+        // dd($cityName,$stateName);
+        $address = [
+            'name' => $request->first_name . ' ' . $request->last_name,
+            'address_line1' => $request->address,
+            'address_line2' => $request->address,
+            'city' => $cityName,
+            'state' =>  $stateName,
+            'pin' => $request->post_code,
+            'country' => 'India',
+        ];
         $vaild = validator($request->all(), [
             'first_name' => 'required',
             'last_name' => 'required',
@@ -147,10 +186,11 @@ class OrderController extends Controller
                 'name' => $request->first_name . ' ' . $request->last_name,
                 'address_line1' => $request->address,
                 'address_line2' => $request->address,
-                'city' => $request->city,
-                'state' => $request->state,
+                'city' =>  $request->city,
+                'state' =>  $request->state,
                 'pin' => $request->post_code,
                 'country' => 'India',
+
             ]);
             if ($add) {
                 $addressId = AddressModel::latest()->first()->id;
@@ -166,13 +206,17 @@ class OrderController extends Controller
                 $order = OrderModel::create([
                     'user_id' => Auth::user()->id,
                     'address_id' => $addressId,
-                    'phone1' => Auth::user()->phone,
-                    'phone2' => Auth::user()->phone,
+                    'phone1' => $request->phone,
+                    'phone2' =>  $request->phone,
                     'total_price' => $request->total_price,
                     'order_status' => 'pending',
                     'estimate_date' => $estimateDate,
                     'cancelled_by' => null,
                     'order_num' => $orderNum,
+                    'coupon_name'=>$offerName,
+                    'discount_percentage'=>$offerPercentage,
+                    'price_after_coupon'=>$priceAfterCode,
+                    'coupon_code'=>$offerCode,
                 ]);
             }
         }
@@ -183,26 +227,65 @@ class OrderController extends Controller
                 $product = ProductModel::find($cartItem->product_id);
 
                 if ($product) {
-                    $totalPrice = $product->discounted_price * $cartItem->times;
-
+                    $totalPrice = $request->total_price;
+                    $productNames[] = $product->name;
+                    $productQuantities[] = $cartItem->times;
+                    $oneTotalPrice = $product->discounted_price * $cartItem->times;
                     $orderItem = OrderItemModel::create([
                         'order_id' => $order->id,
                         'product_id' => $product->id,
                         'original_price' => $product->price,
                         'discounted_price' => $product->discounted_price,
                         'item_count' => $cartItem->times,
-                        'total_price' => $totalPrice,
+                        'total_price' => $oneTotalPrice,
                         'offer_id' => 2,
                     ]);
 
                     if ($orderItem) {
-
                         CartModel::where('id', $cartItem->id)->delete();
                     }
                 }
             }
+            $newsAndOffers = $request->input('update');
 
-            // Redirect to the thank you page with the latest order ID
+            // Now you can use $newsAndOffers variable to determine the user's choice
+            if ($newsAndOffers === 'yes') {
+                try {
+                    $user = Auth::user();
+                    $email = $request->email;
+                    $detail = CompanyDetailsModel::first();
+                    $websiteLink = $detail->company_website;
+
+                    // Check if the user's email already exists in the NewsletterModel
+                    if (!NewsletterModel::where('email', $email)->exists()) {
+                        NewsletterModel::create([
+                            'email' => $email,
+                        ]);
+                    }
+
+                    // Send order confirmation email
+                    Mail::to($user->email)->send(new OrderConfirmation($productNames, $productQuantities, $priceAfterCode, $orderNum, $address));
+
+                    // Send newsletter subscription email
+                    Mail::to($email)->send(new SendNewsletterSubscriptionEmail($websiteLink));
+                } catch (\Exception $e) {
+                    Log::error('Error sending order confirmation email: ' . $e->getMessage());
+                    return redirect()->back()->with('error', 'Failed to send order confirmation email. Please try again later.');
+                }
+            } else {
+                try {
+                    $user = Auth::user();
+                    // Send order confirmation email
+                    Mail::to($user->email)->send(new OrderConfirmation($productNames, $productQuantities, $priceAfterCode, $orderNum, $address));
+                } catch (\Exception $e) {
+                    Log::error('Error sending order confirmation email: ' . $e->getMessage());
+                    return redirect()->back()->with('error', 'Failed to send order confirmation email. Please try again later.');
+                }
+            }
+
+
+
+            session()->put('alert', 'thanks');
             return redirect()->route('thankyou', ['order_id' => $order->id]);
         } else {
             // Handle the case where order creation fails

@@ -72,7 +72,7 @@
                     </div>
                     @else
                     <div class="cr-last-buttons mt-4 d-flex boder boder-dark gap-2 justify-content-center align-items-center">
-                        <a href="{{ url('/login') }}" class="cr-button col-md-5" style="font-size: 10px">
+                        <a href="#" class="cr-button col-md-5 addToCartBtnWithoutLogin" style="font-size: 10px" data-id="{{ $newlist->id }}">
                             Add cart
                         </a>
                         <a href="{{ url('/login') }}" class="cr-button col-md-5" style="font-size: 10px">

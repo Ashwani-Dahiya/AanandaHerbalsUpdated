@@ -115,8 +115,8 @@ class ForgotPasswordController extends Controller
             }
         }
 
-    //     return redirect()->back()->with('error', 'Password reset failed.')->withInput($validatedData)->with('email', $request->email);
-    dd('not vaild');
+        //     return redirect()->back()->with('error', 'Password reset failed.')->withInput($validatedData)->with('email', $request->email);
+        dd('not vaild');
     }
 
     public function verify_otp_page()

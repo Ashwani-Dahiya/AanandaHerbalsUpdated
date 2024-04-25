@@ -88,8 +88,24 @@
                                                             <td>{{ $item->total_price }}</td>
                                                         </tr> --}}
                                                         <tr>
-                                                            <th scope="row">Total Price</th>
-                                                            <td>Rs. {{ $order->total_price }}</td>
+                                                            <th scope="row">Offer Name</th>
+                                                            <td>{{ $order->coupon_name ?? "N/A" }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">Discount in %</th>
+                                                            <td>{{ $order->discount_percentage ?? "N/A" }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">Coupon Code</th>
+                                                            <td>{{ $order->coupon_code ?? "N/A" }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">Price before Offer</th>
+                                                            <td>₹ {{ $order->total_price ?? "N/A" }}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <th scope="row">Price After Offer</th>
+                                                            <td>₹ {{ $order->price_after_coupon ?? "N/A" }}</td>
                                                         </tr>
                                                         <tr>
                                                             <th scope="row">Estimate Date</th>

@@ -47,9 +47,9 @@
 <body class="body-bg-6">
 
     <!-- Loader -->
-    <div id="cr-overlay">
+    {{-- <div id="cr-overlay">
         <span class="loader"></span>
-    </div>
+    </div> --}}
 
     <!-- Header -->
     <header>
@@ -119,7 +119,7 @@
                                     </a>
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <a class="dropdown-item" href="{{ url('/register') }}">Register</a>
+                                            <a class="dropdown-item" href="{{ route('register') }}">Register</a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item" href="{{ route('login') }}">Login</a>
@@ -127,9 +127,11 @@
                                     </ul>
                                 </li>
                             </ul>
-                            <a href="{{ route('cart.page') }}" class="cr-right-bar-item ">
+                            <a href="{{ route('cart.page.temp') }}" class="cr-right-bar-item" id="cartLink">
                                 <i class="ri-shopping-cart-line"></i>
                                 <span>Cart</span>
+                                <span class="position-absolute badge bg-danger text-white" id="cartBadge" style=" border-radius: 50%; font-size: 11px; display: none;padding: 1px 5px; left:94.5%;
+                                top: 28px;"></span>
                             </a>
                         </div>
                         @endif
@@ -366,7 +368,7 @@
                                     </a>
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <a class="dropdown-item" href="{{ url('/register') }}">Register</a>
+                                            <a class="dropdown-item" href="{{ route('register') }}">Register</a>
                                         </li>
                                         <li>
                                             <a class="dropdown-item" href="{{ route('login') }}">Login</a>
@@ -385,12 +387,10 @@
                                 <i class="ri-shopping-cart-line"></i>
                                 <span class="badge bg-danger text-white cart-badge" id="mobcartBadge"></span>
                             </a>
-
-
-
                             @else
-                            <a href="{{ route('login') }}" class="cr-right-bar-item">
+                            <a href="{{ route('cart.page.temp') }}" class="cr-right-bar-item" id="cartLink">
                                 <i class="ri-shopping-cart-line"></i>
+                                <span class="badge bg-danger text-white cart-badge" id="mobcartBadge"></span>
                             </a>
                             @endif
                         </div>
@@ -402,44 +402,44 @@
                                     </a>
                                 </li>
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="{{ url('/products-list') }}">
+                                    <a class="nav-link dropdown-toggle" href="{{ route('product.list') }}">
                                         Our Products
                                     </a>
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <a class="dropdown-item" href="{{ url('/products-list') }}">Herbal
+                                            <a class="dropdown-item" href="{{ route('product.list') }}">Herbal
                                                 Supplements
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="{{ url('/products-list') }}">
+                                            <a class="dropdown-item" href="{{ route('product.list') }}">
                                                 Herbal Teas</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="{{ url('/products-list') }}">Herbal
+                                            <a class="dropdown-item" href="{{ route('product.list') }}">Herbal
                                                 Extracts</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="{{ url('/products-list') }}">Essential
+                                            <a class="dropdown-item" href="{{ route('product.list') }}">Essential
                                                 Oils</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="{{ url('/products-list') }}">Herbal Skincare
+                                            <a class="dropdown-item" href="{{ route('product.list') }}">Herbal Skincare
                                                 Products
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="{{ url('/products-list') }}">Herbal Hair Care
+                                            <a class="dropdown-item" href="{{ route('product.list') }}">Herbal Hair Care
                                                 Products
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="{{ url('/products-list') }}">Herbal Remedies
+                                            <a class="dropdown-item" href="{{ route('product.list') }}">Herbal Remedies
 
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="{{ url('/products-list') }}">Herbal Beverages
+                                            <a class="dropdown-item" href="{{ route('product.list') }}">Herbal Beverages
                                             </a>
                                         </li>
                                     </ul>
@@ -450,53 +450,53 @@
                                     </a>
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <a class="dropdown-item" href="{{ url('/products-list') }}">Himalaya Herbal
+                                            <a class="dropdown-item" href="{{ route('product.list') }}">Himalaya Herbal
                                                 Healthcare
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="{{ url('/products-list') }}">Nature's Way</a>
+                                            <a class="dropdown-item" href="{{ route('product.list') }}">Nature's Way</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="{{ url('/products-list') }}">Celestial
+                                            <a class="dropdown-item" href="{{ route('product.list') }}">Celestial
                                                 Seasoningss
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="{{ url('/products-list') }}">doTERRA</a>
+                                            <a class="dropdown-item" href="{{ route('product.list') }}">doTERRA</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="{{ url('/products-list') }}">Plant
+                                            <a class="dropdown-item" href="{{ route('product.list') }}">Plant
                                                 Therapy</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="{{ url('/products-list') }}">Hyland's</a>
+                                            <a class="dropdown-item" href="{{ route('product.list') }}">Hyland's</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="{{ url('/products-list') }}">Guayaki Yerba
+                                            <a class="dropdown-item" href="{{ route('product.list') }}">Guayaki Yerba
                                                 Mate</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="{{ url('/products-list') }}">Mrs. Meyer's
+                                            <a class="dropdown-item" href="{{ route('product.list') }}">Mrs. Meyer's
                                                 Clean Day</a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="{{ url('/products-list') }}">Badger Balm</a>
+                                            <a class="dropdown-item" href="{{ route('product.list') }}">Badger Balm</a>
                                         </li>
                                     </ul>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ url('/about-us') }}">
+                                    <a class="nav-link" href="{{ route('about.page') }}">
                                         About us
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ url('/blog') }}">
+                                    <a class="nav-link" href="{{ route('blog.page') }}">
                                         Blog
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ url('/contact-us') }}">
+                                    <a class="nav-link" href="{{ route('contact.us') }}">
                                         Contact us
                                     </a>
                                 </li>
@@ -506,11 +506,11 @@
                                     </a>
                                     <ul class="dropdown-menu">
                                         <li>
-                                            <a class="dropdown-item" href="{{ url('/shop') }}">Shop
+                                            <a class="dropdown-item" href="{{ route('shop.page') }}">Shop
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="{{ url('/products-list') }}">Product-List</a>
+                                            <a class="dropdown-item" href="{{ route('product.list') }}">Product-List</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -544,33 +544,33 @@
                         <a href="javascript:void(0)" class="dropdown-list">Our Products</a>
                         <ul class="sub-menu">
                             <li>
-                                <a class="dropdown-item" href="{{ url('/products-list') }}">Himalaya Herbal Healthcare
+                                <a class="dropdown-item" href="{{ route('product.list') }}">Himalaya Herbal Healthcare
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ url('/products-list') }}">Nature's Way</a>
+                                <a class="dropdown-item" href="{{ route('product.list') }}">Nature's Way</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ url('/products-list') }}">Celestial Seasoningss
+                                <a class="dropdown-item" href="{{ route('product.list') }}">Celestial Seasoningss
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ url('/products-list') }}">doTERRA</a>
+                                <a class="dropdown-item" href="{{ route('product.list') }}">doTERRA</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ url('/products-list') }}">Plant Therapy</a>
+                                <a class="dropdown-item" href="{{ route('product.list') }}">Plant Therapy</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ url('/products-list') }}">Hyland's</a>
+                                <a class="dropdown-item" href="{{ route('product.list') }}">Hyland's</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ url('/products-list') }}">Guayaki Yerba Mate</a>
+                                <a class="dropdown-item" href="{{ route('product.list') }}">Guayaki Yerba Mate</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ url('/products-list') }}">Mrs. Meyer's Clean Day</a>
+                                <a class="dropdown-item" href="{{ route('product.list') }}">Mrs. Meyer's Clean Day</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ url('/products-list') }}">Badger Balm</a>
+                                <a class="dropdown-item" href="{{ route('product.list') }}">Badger Balm</a>
                             </li>
                         </ul>
                     </li>
@@ -579,45 +579,45 @@
                         <a href="javascript:void(0)" class="dropdown-list">Brands</a>
                         <ul class="sub-menu">
                             <li>
-                                <a class="dropdown-item" href="{{ url('/products-list') }}">Himalaya Herbal Healthcare
+                                <a class="dropdown-item" href="{{ route('product.list') }}">Himalaya Herbal Healthcare
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ url('/products-list') }}">Nature's Way</a>
+                                <a class="dropdown-item" href="{{ route('product.list') }}">Nature's Way</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ url('/products-list') }}">Celestial Seasoningss
+                                <a class="dropdown-item" href="{{ route('product.list') }}">Celestial Seasoningss
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ url('/products-list') }}">doTERRA</a>
+                                <a class="dropdown-item" href="{{ route('product.list') }}">doTERRA</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ url('/products-list') }}">Plant Therapy</a>
+                                <a class="dropdown-item" href="{{ route('product.list') }}">Plant Therapy</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ url('/products-list') }}">Hyland's</a>
+                                <a class="dropdown-item" href="{{ route('product.list') }}">Hyland's</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ url('/products-list') }}">Guayaki Yerba Mate</a>
+                                <a class="dropdown-item" href="{{ route('product.list') }}">Guayaki Yerba Mate</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ url('/products-list') }}">Mrs. Meyer's Clean Day</a>
+                                <a class="dropdown-item" href="{{ route('product.list') }}">Mrs. Meyer's Clean Day</a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="{{ url('/products-list') }}">Badger Balm</a>
+                                <a class="dropdown-item" href="{{ route('product.list') }}">Badger Balm</a>
                             </li>
                         </ul>
                     </li>
 
                     <li>
-                        <a href="{{ url('/about-us') }}">About us</a>
+                        <a href="{{ route('about.page') }}">About us</a>
                     </li>
                     <li>
-                        <a href="{{ url('/blog') }}">Blog</a>
+                        <a href="{{ route('blog.page') }}">Blog</a>
                     </li>
                     <li>
-                        <a href="{{ url('/contact') }}">Contact us</a>
+                        <a href="{{ route('contact.us') }}">Contact us</a>
                     </li>
                 </ul>
             </div>

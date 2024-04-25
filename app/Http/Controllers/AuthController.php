@@ -56,17 +56,21 @@ class AuthController extends Controller
             ]);
         }
     }
-    public function item_count()
-    {
-        // Check if the user is authenticated
-        if (Auth::check()) {
-            $rec = CartModel::where('user_id', Auth::user()->id)->count();
-            return $rec;
-        } else {
-            // If the user is not authenticated, return 0 or handle it as needed
-            return 0;
-        }
+    public function item_count(Request $request)
+{
+    // Check if the user is authenticated
+    if (Auth::check()) {
+        $rec = CartModel::where('user_id', Auth::user()->id)->count();
+        return $rec;
+    } else if (Auth::guest()) {
+        $ip = $request->ip();
+        $rec = CartModel::where('ip_id', $ip)->count();
+        return $rec;
+    } else {
+        return 0;
     }
+}
+
     public function update_profile_page()
     {
         $states = StateModel::with('cities')->get();
@@ -142,7 +146,7 @@ class AuthController extends Controller
     {
         Session::flush();
         Auth::logout();
-        return redirect('login')->with('success', 'Logout Successfully');
+        return redirect('home')->with('success', 'Logout Successfully');
     }
 
     public function delete_cart_item($id)

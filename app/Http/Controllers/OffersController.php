@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\OffersModel;
+use App\Models\DiscountModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -10,28 +10,28 @@ class OffersController extends Controller
 {
     public function offers_page()
     {
-        $offers = OffersModel::all();
+        $offers = DiscountModel::all();
         return view('admin.all_offers', compact('offers'));
     }
     public function add_offer(Request $request)
     {
         try {
             $validator = Validator::make($request->all(), [
-                'name' => 'required',
-                'type' => 'required',
-                'value' => 'required',
-                'price' => 'required',
+                'on_festival_name' => 'required',
+                'discount_percentage' => 'required',
+                'coupon_code' => 'required',
+                'status' => 'required',
             ]);
 
             if ($validator->fails()) {
                 return redirect()->back()->with('add_error', 'Validation failed')->withErrors($validator)->withInput();
             }
 
-            OffersModel::create([
-                'name' => $request->name,
-                'type' => $request->type,
-                'value' => $request->value,
-                'price' => $request->price,
+            DiscountModel::create([
+                'on_festival_name' => $request->on_festival_name,
+                'discount_percentage' => $request->discount_percentage,
+                'coupon_code' => $request->coupon_code,
+                'status' => $request->status,
             ]);
 
             return redirect()->back()->with('add_success', 'Offer Added Successfully');
@@ -43,12 +43,22 @@ class OffersController extends Controller
 
     {
         try {
-            $offer = OffersModel::find($id);
+            $validator = Validator::make($request->all(), [
+                'on_festival_name' => 'required',
+                'discount_percentage' => 'required',
+                'coupon_code' => 'required',
+                'status' => 'required',
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()->with('add_error', 'Validation failed')->withErrors($validator)->withInput();
+            }
+            $offer = DiscountModel::find($id);
             $offer->update([
-                'name' => $request->name,
-                'type' => $request->type,
-                'value' =>  $request->value,
-                'price' =>  $request->price,
+                'on_festival_name' => $request->on_festival_name,
+                'discount_percentage' => $request->discount_percentage,
+                'coupon_code' => $request->coupon_code,
+                'status' => $request->status,
             ]);
             return redirect()->back()->with('update_success', 'Offer Updated Successfully');
         }

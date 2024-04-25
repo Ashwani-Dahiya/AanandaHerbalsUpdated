@@ -1,4 +1,14 @@
  <!-- Footer -->
+ @if (session('subscribe_success'))
+    <script>
+        alert('{{ session('subscribe_success') }}');
+    </script>
+@endif
+@if (session('subscribe_error'))
+    <script>
+        alert('{{ session('subscribe_error') }}');
+    </script>
+@endif
  <footer class="footer padding-t-100 bg-off-white">
      <div class="container">
          <div class="row footer-top padding-b-100">
@@ -22,7 +32,7 @@
                          <li class="mail-icon">
                              <a href="mailto:{{ $comp_email }}">{{ $comp_email }}</a>
                          </li>
-                         <li class="phone-icon" >
+                         <li class="phone-icon">
                              <a href="tel:{{ $comp_mob }}"> {{ $comp_mob }}</a>
                              &nbsp; &nbsp;
                              <a href="tel:{{ $comp_mob1 }}"> {{ $comp_mob1 }}</a>
@@ -37,11 +47,13 @@
                          <span class="cr-heading-res"></span>
                      </h4>
                      <ul class="cr-footer-links cr-footer-dropdown">
-                         <li><a href="#">About Us</a></li>
+                         <li><a href="{{ route('about.page') }}">About Us</a></li>
+                         <li><a href="{{ route('contact.us') }}">contact Us</a></li>
                          <li><a href="#">Delivery Information</a></li>
-                         <li><a href="#">Privacy Policy</a></li>
-                         <li><a href="#">Terms & Conditions</a></li>
-                         <li><a href="#">contact Us</a></li>
+                         <li><a href="{{ route('privacy.policy.page') }}">Privacy Policy</a></li>
+                         <li><a href="{{ route('terms.conditions.page') }}">Terms & Conditions</a></li>
+                         <li><a href="{{ route('returns.refunds.page') }}">Returns and refunds</a></li>
+                         <li><a href="{{ route('shipping.policy.page') }}">Shipping Policy</a></li>
                          <li><a href="#">Support Center</a></li>
                      </ul>
                  </div>
@@ -68,18 +80,30 @@
                          Subscribe Our Newsletter
                          <span class="cr-heading-res"></span>
                      </h4>
+                     <style>
+                         .cr-search-footer .search-btn {
+                             background: none;
+                             border: none;
+                         }
+
+                     </style>
                      <div class="cr-footer-links cr-footer-dropdown">
-                         <form class="cr-search-footer">
-                             <input class="search-input" type="text" placeholder="Search here...">
-                             <a href="javascript:void(0)" class="search-btn">
+                         <form class="cr-search-footer" action="{{ route('newsletter.post') }}" method="POST">
+                             @csrf
+                             <input class="search-input" type="email" placeholder="Enter your email ..." name="email" required>
+                             @if ($errors->has('email'))
+                             <p class="text-danger">{{ $errors->first('email') }}</p>
+                             @endif
+                             <button class="search-btn" type="submit">
                                  <i class="ri-send-plane-fill"></i>
-                             </a>
+                             </button>
                          </form>
                      </div>
+
                      <div class="cr-social-media">
-                        <span><a href="https://www.facebook.com/Aanandaherbals/" target="_blank"><i class="ri-facebook-line"></i></a></span>
-                        <span><a href="https://www.instagram.com/aanandaherbals/" target="_blank"><i class="ri-instagram-line" ></i></a></span>
-                        <span><a href="https://in.pinterest.com/aanandaherbals0/" target="_blank"><i class="ri-pinterest-line"></i></a></span>
+                         <span><a href="https://www.facebook.com/Aanandaherbals/" target="_blank"><i class="ri-facebook-line"></i></a></span>
+                         <span><a href="https://www.instagram.com/aanandaherbals/" target="_blank"><i class="ri-instagram-line"></i></a></span>
+                         <span><a href="https://in.pinterest.com/aanandaherbals0/" target="_blank"><i class="ri-pinterest-line"></i></a></span>
                          <span><a href="https://www.linkedin.com/company/aanandaherbals" target="_blank"><i class="ri-linkedin-line"></i></a></span>
                      </div>
 
@@ -203,7 +227,7 @@
 
  <!-- Main Custom -->
  <script src="{{ asset('js/main.js') }}"></script>
- 
+
  </body>
 
 

@@ -52,29 +52,29 @@
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <label class="form-label">Name</label>
-                                                        <input class="form-control" type="text" name="name" required>
+                                                        <label class="form-label">Offer Name</label>
+                                                        <input class="form-control" type="text" name="on_festival_name" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <label class="form-label">Price</label>
-                                                        <input class="form-control" type="text" name="price" required>
+                                                        <label class="form-label">Discount in Percentage</label>
+                                                        <input class="form-control" type="number" name="discount_percentage" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <label class="form-label">Type</label>
-                                                        <select class="form-control" name="type" required>
-                                                            <option value="flat">flat</option>
-                                                            <option value="per">per</option>
+                                                        <label class="form-label">Coupon Code</label>
+                                                        <input class="form-control" type="text" name="coupon_code" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <div class="form-group">
+                                                        <label class="form-label">Status</label>
+                                                        <select class="form-control" name="status" required>
+                                                            <option value="1">Active</option>
+                                                            <option value="0">Block</option>
                                                         </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    <div class="form-group">
-                                                        <label class="form-label">Value</label>
-                                                        <input class="form-control" type="text" name="value" required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12">
@@ -109,10 +109,10 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Sr.</th>
-                                                        <th>Name</th>
-                                                        <th>Price</th>
-                                                        <th>Type</th>
-                                                        <th>Value</th>
+                                                        <th>Offer Name</th>
+                                                        <th>Discount in Percentage</th>
+                                                        <th>Coupon Code</th>
+                                                        <th>Status</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
@@ -126,10 +126,14 @@
                                                             $i++;
                                                         @endphp
                                                         <td>{{ $i }}</td>
-                                                        <td>{{ $offer->name }}</td>
-                                                        <td>{{ $offer->price }}</td>
-                                                        <td>{{ $offer->type }}</td>
-                                                        <td>{{ $offer->value }}</td>
+                                                        <td>{{ $offer->on_festival_name }}</td>
+                                                        <td>{{ $offer->discount_percentage }}</td>
+                                                        <td>{{ $offer->coupon_code }}</td>
+                                                        @if ($offer->status==1)
+                                                        <td><span class="badge bg-success">Active</span></td>
+                                                        @else
+                                                        <td><span class="badge bg-danger">Block</span></td>
+                                                        @endif
                                                         <td>
                                                             <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#gridSystemModal{{ $offer->id }}">Update</button>
                                                             <div id="gridSystemModal{{ $offer->id }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="gridModalLabel" aria-hidden="true">
@@ -147,29 +151,30 @@
                                                                                 <div class="row">
                                                                                     <div class="col-md-12 col-xs-12">
                                                                                         <div class="form-group">
-                                                                                            <label for="input1" class="form-label">Name</label>
-                                                                                            <input type="text" name="name" class="form-control" value="{{ $offer->name }}">
+                                                                                            <label for="input1" class="form-label">Offer Name</label>
+                                                                                            <input type="text" name="on_festival_name" class="form-control" value="{{ $offer->on_festival_name }}">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="col-md-12">
                                                                                         <div class="form-group">
-                                                                                            <label class="form-label">Price</label>
-                                                                                            <input class="form-control" type="text" name="price" value="{{ $offer->price }}">
+                                                                                            <label class="form-label">Discount in Percentage</label>
+                                                                                            <input class="form-control" type="text" name="discount_percentage" value="{{ $offer->discount_percentage }}">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="col-md-12">
                                                                                         <div class="form-group">
-                                                                                            <label class="form-label">Type</label>
-                                                                                            <select class="form-control" name="type" required>
-                                                                                                <option value="flat" <?php if($offer->type == "flat") echo "selected"; ?>>flat</option>
-                                                                                                <option value="per" <?php if($offer->type == "per") echo "selected"; ?>>per</option>
+                                                                                            <label class="form-label">
+                                                                                                Coupon Code</label>
+                                                                                                <input class="form-control" type="text" name="coupon_code" value="{{ $offer->coupon_code }}">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-md-12">
+                                                                                        <div class="form-group">
+                                                                                            <label class="form-label">Status</label>
+                                                                                            <select class="form-control" name="status" required>
+                                                                                                <option value="1" <?php if($offer->status == "1") echo "selected"; ?>>Active</option>
+                                                                                                <option value="0" <?php if($offer->status == "0") echo "selected"; ?>>Block</option>
                                                                                             </select>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="col-md-12">
-                                                                                        <div class="form-group">
-                                                                                            <label class="form-label">Value</label>
-                                                                                            <input class="form-control" type="text" name="value" value="{{ $offer->value }}">
                                                                                         </div>
                                                                                     </div>
                                                                                     <div class="col-md-6 col-xs-6">

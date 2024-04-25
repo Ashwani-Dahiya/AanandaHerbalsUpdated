@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\BrandModel;
 use App\Models\CategorieModel;
 use App\Models\ProductModel;
 use Illuminate\Http\Request;
@@ -49,14 +50,14 @@ class ProductController extends Controller
             $cat_id = $list->category_id;
             $brand_id = $list->brand_id;
             $list->category = CategorieModel::where('id', $cat_id)->first();
-            $list->brand = CategorieModel::where('id', $brand_id)->first();
+            $list->brand = BrandModel::where('id', $brand_id)->first();
         }
         return view("admin.my_products", compact("lists"));
     }
     public function add_products_page()
     {
         $categories = CategorieModel::orderBy("id", "desc")->get();
-        $brands = CategorieModel::orderBy("id", "desc")->get();
+        $brands = BrandModel::orderBy("id", "desc")->get();
 
         return view("admin.add_product", compact('categories', 'brands'));
     }

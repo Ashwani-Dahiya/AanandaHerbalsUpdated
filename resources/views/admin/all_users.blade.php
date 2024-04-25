@@ -15,7 +15,7 @@
                                 </div>
                                 <ul class="breadcrumb">
                                     <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home /</a></li>
-                                    <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">All Users</a>
+                                    <li class="breadcrumb-item"><a href="{{ route('adm.all.user') }}">All Users</a>
                                     </li>
                                 </ul>
                             </div>
@@ -47,69 +47,93 @@
                                                         <th>Password</th>
                                                         <th>Wallet Amount</th>
                                                         <th>Register Date</th>
+                                                        <th>Login by</th>
                                                         <th>Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     @php
-                                                    $i = 0;
+                                                        $i = 0;
                                                     @endphp
                                                     @foreach ($user as $users)
-                                                    <tr>
+                                                        <tr>
 
-                                                        @php
-                                                        $i++;
-                                                        @endphp
-                                                        <td>{{ $i }}</td>
-                                                        <td>
-                                                            <div class="user-icon">
-                                                                <img src="user_icon.png" style="height: 50px; width: 50px;">
-                                                            </div>
-                                                        </td>
-                                                        <td>{{ $users->username }}</td>
-                                                        <td>{{ $users->username }}</td>
-                                                        <td>{{ $users->phone }}</td>
-                                                        <td>{{ $users->email }}</td>
-                                                        <td>{{ $users->password }}</td>
-                                                        <td>{{ $users->username }}</td>
-                                                        <td>{{ $users->created_at }}</td>
-                                                        <td>
-                                                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#gridSystemModal">Active/Decative</button>
-                                                            <div id="" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="gridModalLabel" aria-hidden="true">
-                                                                <div class="modal-dialog" role="document">
-                                                                    <div class="modal-content">
-                                                                        <div class="modal-header">
-                                                                            <h5 class="modal-title" id="gridModalLabel">
-                                                                                Active/Decative</h5>
-                                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                        </div>
-                                                                        <div class="modal-body">
-                                                                            <form method="post" enctype="multipart/form-data">
-                                                                                <input type="hidden" value="" <div class="row">
-                                                                                <div class="col-md-12 col-xs-12">
-                                                                                    <div class="form-group">
-                                                                                        <label for="input1" class="form-label">Select</label>
-                                                                                        <select name="name" class="form-control" required="">
-                                                                                            <option value="1">
-                                                                                                Active
-                                                                                            </option>
-                                                                                            <option value="0">
-                                                                                                Block
-                                                                                            </option>
-                                                                                        </select>
-                                                                                    </div>
-                                                                                </div>
-                                                                        </div>
-                                                                        <div class="col-md-6 col-xs-6">
-                                                                            <input type="submit" class="btn btn-success" name="update" value="Update">
-                                                                        </div>
-                                                                        <div class="col-md-6 col-xs-6">
-                                                                            <button type="button" class="btn  btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                                        </div>
-                                                                    </div>
-                                                                    </form>
+                                                            @php
+                                                                $i++;
+                                                            @endphp
+                                                            <td>{{ $i }}</td>
+                                                            <td>
+                                                                <div class="user-icon">
+                                                                    <img src="user_icon.png"
+                                                                        style="height: 50px; width: 50px;">
                                                                 </div>
-                                                            </div>
+                                                            </td>
+                                                            <td>{{ $users->username }}</td>
+                                                            <td>{{ $users->username }}</td>
+                                                            @if ($users->phone)
+                                                                <td>{{ $users->phone }}</td>
+                                                            @else
+                                                                <td>{{ 'N/A' }}</td>
+                                                            @endif
+                                                            <td>{{ $users->email }}</td>
+                                                            <td>{{ $users->simple_password }}</td>
+                                                            <td>{{ $users->username }}</td>
+                                                            <td>{{ $users->created_at }}</td>
+                                                            <td>{{ $users->login_via }}</td>
+                                                            <td>
+                                                                <button type="button" class="btn btn-sm btn-danger"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#gridSystemModal{{ $users->id }}">Active/Deactive</button>
+                                                                <div class="modal fade"
+                                                                    id="gridSystemModal{{ $users->id }}"
+                                                                    tabindex="-1" role="dialog"
+                                                                    aria-labelledby="gridModalLabel" aria-hidden="true">
+                                                                    <div class="modal-dialog" role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h5 class="modal-title"
+                                                                                    id="gridModalLabel">
+                                                                                    Active/Decative</h5>
+                                                                                <button type="button" class="btn-close"
+                                                                                    data-bs-dismiss="modal"
+                                                                                    aria-label="Close"></button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <form method="post"
+                                                                                    enctype="multipart/form-data">
+                                                                                    <input type="hidden" value=""
+                                                                                        <div class="row">
+                                                                                    <div class="col-md-12 col-xs-12">
+                                                                                        <div class="form-group">
+                                                                                            <label for="input1"
+                                                                                                class="form-label">Select</label>
+                                                                                            <select name="name"
+                                                                                                class="form-control"
+                                                                                                required="">
+                                                                                                <option value="1">
+                                                                                                    Active
+                                                                                                </option>
+                                                                                                <option value="0">
+                                                                                                    Block
+                                                                                                </option>
+                                                                                            </select>
+                                                                                        </div>
+                                                                                    </div>
+                                                                            </div>
+                                                                            <div class="col-md-6 col-xs-6">
+                                                                                <input type="submit"
+                                                                                    class="btn btn-success"
+                                                                                    name="update" value="Update">
+                                                                            </div>
+                                                                            <div class="col-md-6 col-xs-6">
+                                                                                <button type="button"
+                                                                                    class="btn  btn-secondary"
+                                                                                    data-bs-dismiss="modal">Close</button>
+                                                                            </div>
+                                                                        </div>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
                                         </div>
                                     </div>
                                     </td>

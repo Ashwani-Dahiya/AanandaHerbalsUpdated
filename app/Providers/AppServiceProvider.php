@@ -33,11 +33,10 @@ class AppServiceProvider extends ServiceProvider
 
 
         View::composer('*', function ($view) {
-            View::composer('*', function ($view) {
-                $authController = new AuthController();
-                $count = $authController->item_count();
-                $view->with('cartCount', $count);
-            });
+            $request = app('request');
+            $authController = new AuthController();
+            $count = $authController->item_count($request);
+            $view->with('cartCount', $count);
         });
         // View::composer('*', function ($view) {
         //     View::composer('*', function ($view) {

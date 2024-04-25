@@ -1,5 +1,6 @@
 @extends('layouts.app')
 @section('content')
+
 <!-- Hero slider -->
 <section class="section-hero padding-b-100 next">
     <div class="cr-slider swiper-container">
@@ -94,18 +95,18 @@
                             </div>
                         </a>
                         @if (Auth::user())
-                            <div class="cr-last-buttons mt-4 d-flex boder boder-dark gap-2 justify-content-center align-items-center">
-                                <a href="#" class="cr-button col-md-5 addToCartBtn" data-id="{{ $items->id }}" style="font-size: 10px">
-                                    Add Cart
-                                </a>
-                                <a href="{{ route('buy.now', ['id' => $items->id]) }}" class="cr-button col-md-5" style="font-size: 10px">
-                                    Buy now
-                                </a>
-                            </div>
+                        <div class="cr-last-buttons mt-4 d-flex boder boder-dark gap-2 justify-content-center align-items-center">
+                            <a href="#" class="cr-button col-md-5 addToCartBtn" data-id="{{ $items->id }}" style="font-size: 10px">
+                                Add Cart
+                            </a>
+                            <a href="{{ route('buy.now', ['id' => $items->id]) }}" class="cr-button col-md-5" style="font-size: 10px">
+                                Buy now
+                            </a>
+                        </div>
                         </a>
                         @else
                         <div class="cr-last-buttons mt-4 d-flex boder boder-dark gap-2 justify-content-center align-items-center">
-                            <a href="{{ url('/login') }}" class="cr-button col-md-5" style="font-size: 10px">
+                            <a href="#" class="cr-button col-md-5 addToCartBtnWithoutLogin" style="font-size: 10px" data-id="{{ $items->id }}">
                                 Add cart
                             </a>
                             <a href="{{ url('/login') }}" class="cr-button col-md-5" style="font-size: 10px">
@@ -180,7 +181,7 @@
                                 </div>
                                 @else
                                 <div class="cr-last-buttons mt-4 d-flex boder boder-dark gap-2 justify-content-center align-items-center">
-                                    <a href="{{ url('/login') }}" class="cr-button col-md-5" style="font-size: 10px">
+                                    <a href="#" class="cr-button col-md-5 addToCartBtnWithoutLogin" style="font-size: 10px" data-id="{{ $product->id }}">
                                         Add cart
                                     </a>
                                     <a href="{{ url('/login') }}" class="cr-button col-md-5" style="font-size: 10px">
@@ -458,6 +459,3 @@
     </div>
 </section>
 @endsection
-
-
-

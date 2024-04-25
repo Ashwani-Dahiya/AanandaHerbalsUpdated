@@ -13,8 +13,8 @@
                                     <h5 class="m-b-10">Datewise Orders</h5>
                                 </div>
                                 <ul class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index.php">Home /</a></li>
-                                    <li class="breadcrumb-item"><a href="index.php">Datewise Orders</a></li>
+                                    <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Home /</a></li>
+                                    <li class="breadcrumb-item"><a href="{{ route('adm.datewise.order.page') }}">Datewise Orders</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -105,7 +105,7 @@
                                                         </td>
                                                         <td>
                                                             @if($data['item'])
-                                                            {{ $data['item']->total_price }}
+                                                            {{ $data['order']->price_after_coupon }}
                                                         @else
                                                             N/A
                                                         @endif
@@ -117,7 +117,7 @@
                                                             N/A
                                                         @endif
                                                         </td>
-                                                        
+
                                                         <td>
                                                             <form action="{{ route('adm.view.order',['id'=>$data['order']->id]) }}" method="POST">
                                                                 @csrf

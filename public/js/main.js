@@ -2,7 +2,7 @@
     "use strict";
 
     $(window).on("load", function () {
-        $("#cr-overlay").fadeOut("slow");
+        $("#cr-overlay").fadeOut("fast");
     });
 
     $(document).ready(function () {

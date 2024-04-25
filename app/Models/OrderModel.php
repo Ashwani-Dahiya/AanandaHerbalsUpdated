@@ -27,6 +27,10 @@ class OrderModel extends Model
         'remark',
         'order_status',
         'order_num',
+        'coupon_name',
+        'coupon_code',
+        'discount_percentage',
+        'price_after_coupon',
 
     ];
     public function user()

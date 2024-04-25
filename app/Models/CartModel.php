@@ -13,6 +13,8 @@ class CartModel extends Model
         'user_id',
         'product_id',
         'times',
+        'type',
+        'ip_id',
     ];
     public function user()
     {

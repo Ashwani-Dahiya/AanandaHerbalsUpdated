@@ -5,14 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class OffersModel extends Model
+class NewsletterModel extends Model
 {
     use HasFactory;
-    protected $table = 'offers';
+    protected $table = 'newsletter_email';
     protected $fillable = [
-        'name',
-        'price',
-        'type',
-        'value',
-    ] ;
+        'email',
+    ];
+
 }

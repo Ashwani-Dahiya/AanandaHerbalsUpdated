@@ -28,7 +28,7 @@ $formattedValue = number_format($deliveryCharges, 2);
                 <div class="col-lg-12">
                     <div class="cr-breadcrumb-title">
                         <h2>Checkout</h2>
-                        <span> <a href="index.php">Home</a> - Checkout</span>
+                        <span> <a href="{{ route('home') }}">Home</a> - Checkout</span>
                     </div>
                 </div>
             </div>
@@ -41,13 +41,18 @@ $formattedValue = number_format($deliveryCharges, 2);
 <section class="cr-checkout-section padding-tb-100">
     <div class="container">
         <form action="{{ route('add.to.orderItem') }}" method="POST">
+            {{-- <form action="{{ route('test.post') }}" method="POST"> --}}
             @csrf
             <div class="row">
 
                 <!-- Sidebar Area Start -->
                 <div class="cr-checkout-rightside col-lg-4 col-md-12">
+                    <div class="cr-sidebar-wrap cr-checkout-del-wrap">
+                        <p class="text-danger">! Free delivery for orders up to Rs. <b>500/-</b></p>
+                    </div>
                     <div class="cr-sidebar-wrap">
                         <!-- Sidebar Summary Block -->
+
                         <div class="cr-sidebar-block">
                             <div class="cr-sb-title">
                                 <h3 class="cr-sidebar-title">Summary</h3>
@@ -91,25 +96,63 @@ $formattedValue = number_format($deliveryCharges, 2);
                                             <span class="text-left">Sub-Total</span>
                                             <span class="text-right">₹{{ $totalPrice }}</span>
                                         </div>
-                                        <div>
-                                            <span class="text-left">Delivery Charges</span>
-                                            <span class="text-right">₹{{ $formattedValue }}</span>
-                                        </div>
-                                        <div class="cr-checkout-summary-total">
-                                            <span class="text-left">Total Amount</span>
-                                            <span class="text-right">₹{{ $totalPrice + $formattedValue }}</span>
-                                        </div>
+                                        @php
+                                        $deliveryCharge = 0;
+                                        if ($totalPrice < 500) { $deliveryCharge=$formattedValue; } @endphp @if ($deliveryCharge> 0)
+                                            <div>
+                                                <span class="text-left">Delivery Charges</span>
+                                                <span class="text-right">₹{{ $deliveryCharge }}</span>
+                                            </div>
+
+                                            @else
+                                            <p class="text-success">Free Delivery</p>
+                                            @endif
+                                            @php
+                                            $finalPrice = $totalPrice + $deliveryCharge;
+                                            @endphp
+                                            <p class="text-success">Expected delivery within 5 days.</p>
+                                            <div class="cr-checkout-summary-total">
+                                                <span class="text-left">Total Amount</span>
+                                                <span class="text-right" id="finalPrice">₹{{ $finalPrice }}</span>
+                                            </div>
+                                            <p id="couponsuccessmsg" class="text-success d-none" style="font-size:13px;"></p>
+                                            <form id="couponForm" action="{{ route('vaild.coupon') }}" method="POST">
+                                                <input type="hidden" name="finalPrice" id="subfinalPrice" value="{{ $finalPrice }}">
+                                                @csrf
+                                                <label id="coupon_label" for="dis" class="mt-2">Discount Coupon</label>
+                                                <input type="text" id="dis" class="form-control" name="code">
+                                                <button type="button" class="cr-button" id="coupon_btn">Apply</button>
+                                            </form>
+                                            <p class="text-danger d-none" id="errorcoupanmsg">Invaild Coupan Code</p>
                                     </div>
+
+
+
 
                                 </div>
                             </div>
                         </div>
                         <!-- Sidebar Summary Block -->
                     </div>
-                    <div class="cr-sidebar-wrap cr-checkout-del-wrap">
-                        <!-- Sidebar Summary Block -->
-
-                        <!-- Sidebar Summary Block -->
+                    <div class="cr-sidebar-wrap cr-checkout-pay-wrap">
+                        <div class="cr-sidebar-block">
+                            <div class="cr-sb-title">
+                                <h3 class="cr-sidebar-title">News and Offers</h3>
+                            </div>
+                            <div class="cr-sb-block-content">
+                                <div class="cr-checkout-pay">
+                                    <div class="cr-pay-desc">Email me with news and offers</div>
+                                    <span class="cr-pay-option">
+                                        <span>
+                                            <input type="radio" id="pay1_yes" name="update" value="yes">
+                                            <label for="pay1_yes">Yes</label>
+                                            <input type="radio" id="pay1_no" name="update" value="no" checked>
+                                            <label for="pay1_no">No</label>
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="cr-sidebar-wrap cr-checkout-pay-wrap">
                         <!-- Sidebar Payment Block -->
@@ -124,19 +167,19 @@ $formattedValue = number_format($deliveryCharges, 2);
 
                                     <span class="cr-pay-option">
                                         <span>
-                                            <input type="radio" id="pay1" name="radio-group" checked>
+                                            <input type="radio" id="pay1" name="radio-group" value="cash_on_delivery">
                                             <label for="pay1">Cash On Delivery</label>
                                         </span>
                                     </span>
                                     <span class="cr-pay-option">
                                         <span>
-                                            <input type="radio" id="pay2" name="radio-group">
+                                            <input type="radio" id="pay2" name="radio-group" value="upi">
                                             <label for="pay2">UPI</label>
                                         </span>
                                     </span>
                                     <span class="cr-pay-option">
                                         <span>
-                                            <input type="radio" id="pay3" name="radio-group">
+                                            <input type="radio" id="pay3" name="radio-group" value="back">
                                             <label for="pay3">Bank Transfer</label>
                                         </span>
                                     </span>
@@ -146,6 +189,7 @@ $formattedValue = number_format($deliveryCharges, 2);
                         </div>
                         <!-- Sidebar Payment Block -->
                     </div>
+
                     <div class="cr-sidebar-wrap cr-check-pay-img-wrap">
                         <!-- Sidebar Payment Block -->
                         <div class="cr-sidebar-block">
@@ -163,6 +207,7 @@ $formattedValue = number_format($deliveryCharges, 2);
                         <!-- Sidebar Payment Block -->
                     </div>
                 </div>
+
                 <div class="cr-checkout-leftside col-lg-8 col-md-12 m-t-991">
                     <!-- checkout content Start -->
                     <div class="cr-checkout-content">
@@ -191,30 +236,63 @@ $formattedValue = number_format($deliveryCharges, 2);
                                             </span>
                                             <span class="cr-bill-wrap">
                                                 <label>Address</label>
-                                                <input type="text" name="address" name="address" required>
+                                                @if($lastAddress)
+                                                <input type="text" name="address" name="address" required value="{{ $lastAddress->address_line1 }}">
+                                                @else
+                                                <input type="text" name="address" name="address" required value="">
+                                                @endif
+
                                             </span>
                                             <span class="cr-bill-wrap cr-bill-half">
                                                 <label>Country *</label>
-                                                <input type="text" value="India" readonly >
+                                                <input type="text" value="India" readonly>
                                             </span>
+                                            <style>
+                                                .cr-checkout-wrap .cr-check-bill-form select {
+                                                    height: 50px;
+                                                    background-color: transparent;
+                                                    border: 1px solid #e9e9e9;
+                                                    color: #2b2b2d;
+                                                    font-size: 14px;
+                                                    margin-bottom: 26px;
+                                                    padding: 0 15px;
+                                                    width: 100%;
+                                                    outline: none;
+                                                    border-radius: 5px;
+                                                }
 
+                                                select {
+                                                    margin: 0;
+                                                    font-family: inherit;
+                                                    font-size: inherit;
+                                                    line-height: inherit;
+                                                }
+
+                                            </style>
                                             <span class="cr-bill-wrap cr-bill-half ">
-                                                <label>State</label>
-                                                <select class="form-control" name="state" required>
-                                                    <option selected>Choose ...</option>
+                                                <label>State *</label>
+                                                <select class="form-control" name="state" aria-label="Default select example" required>
+                                                    <option>Choose ...</option>
                                                     @foreach ($states as $state)
-                                                    <option value="{{ $state->id }}">{{ $state->name }}</option>
+                                                    <option value="{{ $state->id }}" @if ($lastAddress && $state->id == $lastAddress->state)
+                                                        selected
+                                                        @endif>{{ $state->name }}</option>
                                                     @endforeach
                                                 </select>
                                                 @if ($errors->has('state'))
                                                 <p class="text-danger">{{ $errors->first('state') }}</p>
                                                 @endif
                                             </span>
-
-                                            <span class="cr-bill-wrap cr-bill-half ">
-                                                <label>City *</label>
+                                            <span class="cr-bill-wrap cr-bill-half">
+                                                <label style="margin-left: -27px;">City *</label>
                                                 <select class="form-control" aria-label="Default select example" name="city" required>
-                                                    <option selected>Choose ...</option>
+                                                    <option>Choose ...</option>
+                                                    @foreach ($cityNames as $cityId => $cityName)
+                                                    <option value="{{ $cityId }}" @if ($lastAddress && $cityId==$lastAddress->city) selected @endif>
+                                                        {{ $cityName }}
+                                                    </option>
+                                                    @endforeach
+
                                                 </select>
                                                 @if ($errors->has('city'))
                                                 <p class="text-danger">{{ $errors->first('city') }}</p>
@@ -222,22 +300,25 @@ $formattedValue = number_format($deliveryCharges, 2);
                                             </span>
 
                                             <span class="cr-bill-wrap cr-bill-half">
-                                                <label>Area Pin Code</label>
-                                                <input type="number" class="form-control" name="post_code" style="height: 37px" required>
-                                            </span>
+                                                <label style="margin-left: -27px">Pin Code *</label>
+                                                @if($lastAddress)
+                                                <input type="number" name="post_code" required value="{{ $lastAddress->pin }}">
+                                                @else
+                                                <input type="number" name="post_code" required value="">
+                                                @endif
 
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            @php
-                            $finalPrice=$totalPrice + $formattedValue ;
-                            @endphp
+
 
                             @foreach ($carts as $cart)
                             <input type="hidden" name="cart_id[]" value="{{ $cart->id }}">
                             <input type="hidden" name="product_id[]" value="{{ $cart->product_id }}">
                             <input type="hidden" name="total_price" value="{{ $finalPrice }}">
+                            <input type="hidden" name="price_after_coupan" class="priceAfterOffer" value="">
 
                             <!-- Add more hidden input fields for other data you want to send -->
                             @endforeach
@@ -256,7 +337,13 @@ $formattedValue = number_format($deliveryCharges, 2);
 </section>
 <!-- Checkout section End -->
 @else
-<h5 class="m-4 p-4">No items in the cart.</h5>
+<script>
+    // Redirect to the home route after 3 seconds (3000 milliseconds)
+    setTimeout(function() {
+        window.location.href = "{{ route('home') }}";
+    }, 0); // Adjust the duration as needed (in milliseconds)
+
+</script>
 @endif
 @endsection
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -272,13 +359,57 @@ $formattedValue = number_format($deliveryCharges, 2);
                     , success: function(data) {
                         $('select[name="city"]').empty();
                         $.each(data, function(key, value) {
-                            $('select[name="city"]').append('<option value="' + value.city + '">' + value.city + '</option>');
+                            $('select[name="city"]').append('<option value="' + value.id + '">' + value.city + '</option>');
                         });
                     }
                 });
             } else {
                 $('select[name="city"]').empty();
             }
+        });
+    });
+
+</script>
+<script>
+    $(document).ready(function() {
+        $("#coupon_btn").click(function() {
+            var finalPrice = $("#subfinalPrice").val();
+            var code = $("#dis").val();
+
+            var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+            var payload = JSON.stringify({
+                finalPrice: finalPrice
+                , code: code
+                , _token: csrfToken
+            });
+
+            $.ajax({
+                type: "POST"
+                , url: "{{ route('vaild.coupon') }}"
+                , data: payload
+                , contentType: "application/json"
+                , headers: {
+                    'X-CSRF-Token': csrfToken
+                }
+                , success: function(response) {
+                    if (response.success) {
+                        $("#coupon_btn").hide();
+                        $("#coupon_label").hide();
+                        $("#dis").hide();
+                        $("#couponsuccessmsg").removeClass('d-none').text('Coupon Successfully Applied Discount is ' + response.discount_percentage + "%");
+                        var finalPrice = response.discounted_price;
+                        $("#finalPrice").text(finalPrice);
+                        $(".priceAfterOffer").val(finalPrice);
+                    } else {
+                        $("#errorcoupanmsg").removeClass('d-none');
+                    }
+                }
+                , error: function(xhr, status, error) {
+                    console.error("Coupon application failed: " + error);
+                }
+
+            });
         });
     });
 

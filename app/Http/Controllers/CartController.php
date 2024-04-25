@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\CartModel;
+use App\Models\IPAddressModel;
 use App\Models\ProductModel;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
@@ -16,13 +16,27 @@ class CartController extends Controller
         $user = Auth::user();
         $carts = CartModel::where('user_id', $user->id)->get();
 
-        if ($carts !== null && $carts->isNotEmpty()) {
-            return view('cart', compact('carts'));
+        // Create an array to store product IDs in the cart
+        $productIdsInCart = $carts->pluck('product_id')->toArray();
+
+        // Create an array to store category IDs of products in the cart
+        $categoryIds = ProductModel::whereIn('id', $productIdsInCart)->pluck('category_id')->toArray();
+
+        // Fetch recommended products based on the categories of products in the cart
+        $recommendedProducts = ProductModel::whereNotIn('id', $productIdsInCart)
+            ->whereIn('category_id', $categoryIds)
+            ->get();
+
+        if ($carts->isNotEmpty()) {
+            return view('cart', compact('carts', 'recommendedProducts'));
         } else {
-            $carts = NULL;
-            return view('cart', compact('carts'));
+            $carts = null;
+            $recommendedProducts = null;
+            return view('cart', compact('carts', 'recommendedProducts'));
         }
     }
+
+
 
     public function add_to_cart($id)
     {
@@ -81,12 +95,12 @@ class CartController extends Controller
     public function updateQuantity(Request $request)
     {
         $user_id = Auth::user()->id;
-$cart = CartModel::where('id', $request->cart_id)
-                 ->where('user_id', $user_id) 
-                 ->orWhere('product_id', $request->product_id)
-                 ->first();
-            $product = ProductModel::findOrFail($request->product_id);
-            $price=$product->discounted_price;
+        $cart = CartModel::where('id', $request->cart_id)
+            ->where('user_id', $user_id)
+            ->orWhere('product_id', $request->product_id)
+            ->first();
+        $product = ProductModel::findOrFail($request->product_id);
+
         if ($cart) {
             // Update the quantity based on the increment value
             $cart->update([
@@ -98,7 +112,7 @@ $cart = CartModel::where('id', $request->cart_id)
                 'success' => true,
                 'message' => 'Cart quantity updated successfully',
                 'times' => $cart->times,
-                'price' => $price,
+                'price' => $product->discounted_price,
 
 
             ]);
@@ -116,12 +130,21 @@ $cart = CartModel::where('id', $request->cart_id)
 
     public function cart_count()
     {
-        if (Auth::check()) {
-            $user = Auth::user();
-            $cartCount = CartModel::where('user_id', $user->id)->count();
-            return response()->json(['success' => true, 'cartCount' => $cartCount]);
+        if (Auth::user()) {
+            $cartCount = CartModel::where('user_id', Auth::user()->id)->count();
+            return response()->json([
+                'success' => true,
+                'cartCount' => $cartCount,
+            ]);
         } else {
-            return response()->json(['success' => false, 'message' => 'User is not authenticated']);
+            $ip=request()->ip();
+            $IpID=IPAddressModel::where('ip_address',$ip)->first();
+            $cartCount = CartModel::where('ip_id', $IpID->id)->get()->count();
+            return response()->json([
+                'success' => true,
+                'cartCount' => $cartCount,
+
+            ]);
         }
     }
 }
