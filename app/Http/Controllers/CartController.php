@@ -28,11 +28,11 @@ class CartController extends Controller
             ->get();
 
         if ($carts->isNotEmpty()) {
-            return view('cart', compact('carts', 'recommendedProducts'));
+            return view('newcart', compact('carts', 'recommendedProducts'));
         } else {
             $carts = null;
             $recommendedProducts = null;
-            return view('cart', compact('carts', 'recommendedProducts'));
+            return view('newcart', compact('carts', 'recommendedProducts'));
         }
     }
 
@@ -59,11 +59,11 @@ class CartController extends Controller
             $cart->save();
             $times = 1;
         }
-
+        session()->put('add-to-cart-success', 'Product added to cart successfully');
         $data = [
             'success' => true,
             'times' => $times,
-            // any other data you want to include
+
         ];
 
         return response()->json($data);
@@ -102,6 +102,7 @@ class CartController extends Controller
         $product = ProductModel::findOrFail($request->product_id);
 
         if ($cart) {
+            $times=$cart->times + $request->increment;
             // Update the quantity based on the increment value
             $cart->update([
                 'times' => $cart->times + $request->increment,
@@ -111,7 +112,7 @@ class CartController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Cart quantity updated successfully',
-                'times' => $cart->times,
+                'times' => $times,
                 'price' => $product->discounted_price,
 
 
@@ -128,7 +129,7 @@ class CartController extends Controller
 
 
 
-    public function cart_count()
+    public function cart_count(Request $request)
     {
         if (Auth::user()) {
             $cartCount = CartModel::where('user_id', Auth::user()->id)->count();
@@ -137,14 +138,41 @@ class CartController extends Controller
                 'cartCount' => $cartCount,
             ]);
         } else {
-            $ip=request()->ip();
-            $IpID=IPAddressModel::where('ip_address',$ip)->first();
-            $cartCount = CartModel::where('ip_id', $IpID->id)->get()->count();
-            return response()->json([
-                'success' => true,
-                'cartCount' => $cartCount,
+            $cookies = $request->cookie();
+            $products = [];
 
-            ]);
+            // Check if the 'products' cookie exists
+            if (isset($cookies['products'])) {
+                // Unserialize the cookie value
+                $cookie_data = unserialize($cookies['products']);
+
+                // Initialize an empty array to store product IDs and quantities
+                $products = [];
+
+                // Iterate through each product ID and quantity in the cookie data
+                foreach ($cookie_data as $product_id => $quantity) {
+                    // Retrieve the product from the database based on its ID
+                    $product = ProductModel::find($product_id);
+
+                    // If the product exists, add it to the products array along with its quantity
+                    if ($product) {
+                        $products[] = [
+                            'id' => $product->id,
+                            'name' => $product->name,
+                            'image' => $product->image,
+                            'model' => $product->model,
+                            'quantity' => $quantity['items'],
+                            'discounted_price' => $product->discounted_price,
+                        ];
+                    }
+                }
+                $cartCount = count($products);
+                return response()->json([
+                    'success' => true,
+                    'cartCount' => $cartCount,
+
+                ]);
+            }
         }
     }
 }

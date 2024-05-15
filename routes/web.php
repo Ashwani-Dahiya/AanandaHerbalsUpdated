@@ -38,7 +38,8 @@ use App\Http\Controllers\WithoutLoginCartController;
 */
 
 Route::post('/test/post', [TestController::class, 'req_test'])->name('test.post');
-Route::get('/test/get', [TestController::class, 'req_ip'])->name('test.get');
+Route::get('/get/{id}', [TestController::class, 'req_ip'])->name('test.get');
+Route::get('/test', [TestController::class, 'cart_page'])->name('cart.test');
 Route::get('/add-item-into-cart/{productId}', [WithoutLoginCartController::class, 'add_to_cart'])->name('without.login.add.cart');
 Route::get('/about-us', function () {
     return view('about');
@@ -52,7 +53,6 @@ Route::post('/admin/login', [AdminControler::class, 'login'])->name('adm.login')
 Route::post('/subscribe/newsletter', [NewsletterController::class, 'newsletter_save'])->name('newsletter.post');
 Route::post('/filterprice', [HomeController::class, 'filter_search'])->name('filter.by.price');
 Route::get('/', [AuthController::class, 'home'])->name('home');
-Route::get('/home', [AuthController::class, 'home'])->name('home');
 Route::get('/products-list', [ProductController::class, 'index'])->name('product.list');
 Route::post('/products-list', [ProductController::class, 'index'])->name('search.products');
 Route::get('/blog', [BlogController::class, 'show'])->name('blog.page');
@@ -66,12 +66,14 @@ Route::put('/cart/update_quantity', [CartController::class, 'updateQuantity'])->
 Route::get('login/with/facebook', [AuthController::class, 'facebook_login_page'])->name('login.with.facebook');
 Route::get('/auth/facebook/callback', [AuthController::class, 'handlefacebookCallback'])->name('callback.facebook');
 Route::get('/temp-cart', [GuestController::class, 'temp_cart_page'])->name('cart.page.temp');
+Route::get('/del-item/cart/{id}', [GuestController::class, 'del_cookie'])->name('delete.cookie.item');
 Route::get('/delete-cart-item/{id}', [AuthController::class, 'delete_cart_item'])->name('delete.card.item');
-Route::put('/cart/update_quantity/withoutLogin',[GuestController::class, 'updateQuantity'])->name('cart.updateQuantity.withoutLogin');
-Route::get('/privacy-policy',[FooterPageController::class, 'privacy_policy_page'])->name('privacy.policy.page');
-Route::get('/terms-and-conditions',[FooterPageController::class, 'terms_conditions_page'])->name('terms.conditions.page');
-Route::get('/returns-and-refunds',[FooterPageController::class, 'returns_refunds_page'])->name('returns.refunds.page');
-Route::get('/shipping-policy',[FooterPageController::class, 'shipping_policy_page'])->name('shipping.policy.page');
+Route::put('/cart/update_quantity/withoutLogin', [GuestController::class, 'updateQuantity'])->name('cart.updateQuantity.withoutLogin');
+Route::get('/privacy-policy', [FooterPageController::class, 'privacy_policy_page'])->name('privacy.policy.page');
+Route::get('/terms-and-conditions', [FooterPageController::class, 'terms_conditions_page'])->name('terms.conditions.page');
+Route::get('/returns-and-refunds', [FooterPageController::class, 'returns_refunds_page'])->name('returns.refunds.page');
+Route::get('/shipping-policy', [FooterPageController::class, 'shipping_policy_page'])->name('shipping.policy.page');
+Route::put('/temp-cart/update_quantity', [GuestController::class, 'update_Quantity'])->name('cart.update.quantity.withoutlogin');
 
 
 
@@ -80,13 +82,13 @@ Route::group(
     ['middleware' => 'guest'],
     function () {
         Route::get('login', [AuthController::class, 'login_page'])->name('login');
-        Route::post('login', [AuthController::class, 'login'])->name('login');
+        Route::post('login', [AuthController::class, 'login'])->name('login.post');
         Route::get('login/with/google', [AuthController::class, 'google_login_page'])->name('login.with.google');
         Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('callback');
         Route::get('login/with/linkedin', [AuthController::class, 'linkedin_login_page'])->name('login.with.linkedin');
         Route::get('/auth/linkedin/callback', [AuthController::class, 'handleLinkedinCallback'])->name('callback.linkedin');
-        Route::get('register', [AuthController::class, 'register_page'])->name('register');
-        Route::post('register', [AuthController::class, 'register'])->name('register');
+        Route::get('/register', [AuthController::class, 'register_page'])->name('register');
+        Route::post('/register', [AuthController::class, 'register'])->name('register.post');
         Route::get('forget-password', [ForgotPasswordController::class, 'showForgetPasswordForm'])->name('forget.password.page');
         Route::post('forget-password-post', [ForgotPasswordController::class, 'sendPasswordResetEmail'])->name('forget.password.post');
         Route::post('very-user-otp', [ForgotPasswordController::class, 'verify_otp'])->name('verify.otp.post');
@@ -105,19 +107,20 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/update', [AuthController::class, 'update_profile'])->name('profile.update.data');
     Route::get('/view-profile', [AuthController::class, 'profile_page'])->name('profile.view');
     Route::get('/my-orders', [OrderController::class, 'order_page'])->name('order.page');
+    Route::post('/delete-auth', [AuthController::class, 'delete'])->name('delete.auth');
+    Route::post('/change-password', [AuthController::class, 'change_password'])->name('change.password');
+
+    Route::post('/add-to-order-item/', [OrderController::class, 'add_into_order_item'])->name('add.to.orderItem');
+    Route::get('/thankyou/{order_id}', [OrderController::class, 'thankYouPage'])->name('thankyou');
+    Route::post('/vaild/coupon', [DiscountController::class, 'validateCoupon'])->name('vaild.coupon');
+    Route::post('/cart/update_quantity', 'CartController@updateQuantity')->name('cart.update_quantity');
+    Route::post('/user/cancel-order/{id}', [OrderController::class, 'user_cancel_order'])->name('user.cancel.order');
+    Route::get('/user/view-order/{id}', [OrderController::class, 'user_view_order_details'])->name('user.view.order.details');
     Route::get('/dashboard', [UserController::class, 'main_page'])->name('user.dashboard');
     Route::get('/orders', [UserController::class, 'your_orders'])->name('user.orders');
     Route::get('/user-update-profile', [UserController::class, 'update_profile'])->name('user.update.profile');
-    Route::post('/delete-auth', [AuthController::class, 'delete'])->name('delete.auth');
-    Route::post('/change-password', [AuthController::class, 'change_password'])->name('change.password');
     Route::get('/delete-account', [UserController::class, 'delete_page'])->name('delete.account.page');
     Route::get('/user-change-password', [UserController::class, 'change_password_page'])->name('change.password.page');
-    Route::post('/add-to-order-item/', [OrderController::class, 'add_into_order_item'])->name('add.to.orderItem');
-    Route::get('/thankyou/{order_id}', [OrderController::class, 'thankYouPage'])->name('thankyou');
-    Route::post('/user/cancel-order/{id}', [OrderController::class, 'user_cancel_order'])->name('user.cancel.order');
-    Route::get('/user/view-order/{id}', [OrderController::class, 'user_view_order_details'])->name('user.view.order.details');
-    Route::post('/vaild.coupon', [DiscountController::class, 'validateCoupon'])->name('vaild.coupon');
-    Route::post('/cart/update_quantity', 'CartController@updateQuantity')->name('cart.update_quantity');
 });
 
 

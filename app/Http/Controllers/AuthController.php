@@ -18,6 +18,7 @@ use App\Models\HomeMainBannerModel;
 use App\Models\HomeMiddleBannerModel;
 use App\Models\ReviewModel;
 use App\Models\SectionModel;
+use App\Models\CityModel;
 use Exception;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Http;
@@ -57,19 +58,19 @@ class AuthController extends Controller
         }
     }
     public function item_count(Request $request)
-{
-    // Check if the user is authenticated
-    if (Auth::check()) {
-        $rec = CartModel::where('user_id', Auth::user()->id)->count();
-        return $rec;
-    } else if (Auth::guest()) {
-        $ip = $request->ip();
-        $rec = CartModel::where('ip_id', $ip)->count();
-        return $rec;
-    } else {
-        return 0;
+    {
+        // Check if the user is authenticated
+        if (Auth::check()) {
+            $rec = CartModel::where('user_id', Auth::user()->id)->count();
+            return $rec;
+        } else if (Auth::guest()) {
+            $ip = $request->ip();
+            $rec = CartModel::where('ip_id', $ip)->count();
+            return $rec;
+        } else {
+            return 0;
+        }
     }
-}
 
     public function update_profile_page()
     {
@@ -79,10 +80,38 @@ class AuthController extends Controller
     }
     public function update_profile(Request $request)
     {
+        $stateName = "";
+        $cityName = "";
+
+        if (is_string($request->state)) {
+            $stateName = $request->state;
+        } if (is_numeric($request->state)) {
+            $state = StateModel::findOrFail($request->state);
+            $stateName = $state->name;
+        }
+
+        if (is_string($request->city)) {
+            $cityName = $request->city;
+        } if (is_numeric($request->city)) {
+            $city = CityModel::findOrFail($request->city);
+            $cityName = $city->city;
+        }
+
+      
+
         $user = User::find(Auth::user()->id);
-        $newdata = $request->all();
-        $user->username = $request->first_name;
-        $user->update($newdata);
+        $user->update([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'city' => $cityName,
+            'state' => $stateName,
+            'post_code' => $request->post_code,
+            'country' => $request->country,
+            'username' => $request->first_name,
+        ]);
         return redirect()->route('profile.view')->with("success", "Profile Updated Successfully");
     }
     public function profile_page()
@@ -102,11 +131,42 @@ class AuthController extends Controller
             'email' => 'required|string|email',
             'password' => 'required|string',
         ]);
-        if (Auth::attempt($request->only('email', 'password'))) {
-            return response()->json(['status' => true, 'msg' => 'Done']);
-        }
 
-        return response()->json(['status' => false, 'msg' => 'Please check email or password']);
+        if (Auth::attempt($request->only('email', 'password'))) {
+            $cookies = $request->cookie();
+            $products = [];
+
+            // Check if the 'products' cookie exists
+            if (isset($cookies['products'])) {
+                // Unserialize the cookie value
+                $cookie_data = unserialize($cookies['products']);
+
+                // Iterate through each product ID and quantity in the cookie data
+                foreach ($cookie_data as $product_id => $quantity) {
+                    $product = ProductModel::find($product_id);
+
+                    if ($product) {
+                        // Add the product to the cart
+                        $added = CartModel::create([
+                            'user_id' => Auth::user()->id,
+                            'product_id' => $product_id,
+                            'times' => $quantity['items'],
+                        ]);
+
+                        // If the product was successfully added to the cart, remove it from the cookie
+                        if ($added) {
+                            unset($cookie_data[$product_id]);
+                        }
+                    }
+                }
+
+                // Serialize the updated cookie data and set it as a new cookie
+                $serializedCookieData = serialize($cookie_data);
+                return response()->json(['status' => true, 'msg' => 'Done'])->cookie('products', $serializedCookieData);
+            }
+
+            return response()->json(['status' => false, 'msg' => 'Please check email or password']);
+        }
     }
 
     public function register_page()
@@ -117,26 +177,19 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $this->validate($request, [
-            'first_name' => 'required|string|min:2|max:100',
+            'name' => 'required|string|min:2|max:100',
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|min:6|confirmed',
             'password_confirmation' => 'required|same:password',
         ]);
         User::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'username' => $request->first_name,
+            'username' => $request->name,
             'phone' => $request->phone_number,
-            'address' => $request->address,
-            'country' => $request->country,
-            'state' => $request->state,
-            'city' => $request->city,
-            'post_code' => $request->post_code,
         ]);
         if (Auth::attempt($request->only('email', 'password'))) {
-            return redirect()->route('home')->with('success', 'Successfully Logged In');
+            return redirect()->route('home')->with('success-register', 'Your account has been created successfully');
         }
         return redirect('auth.register')->withError('error');
     }
@@ -144,9 +197,8 @@ class AuthController extends Controller
 
     public function logout()
     {
-        Session::flush();
         Auth::logout();
-        return redirect('home')->with('success', 'Logout Successfully');
+        return redirect()->route('home')->with('success-logout', 'Logout Successfully');
     }
 
     public function delete_cart_item($id)
@@ -295,12 +347,14 @@ class AuthController extends Controller
         dd($user);
     }
 
-    public function facebook_login_page(){
+    public function facebook_login_page()
+    {
         return Socialite::driver('facebook')->redirect();
     }
-    public function handleFacebookCallback(){
+    public function handleFacebookCallback()
+    {
         $user = Socialite::driver('facebook')->user();
 
-       dd($user);
+        dd($user);
     }
 }

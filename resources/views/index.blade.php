@@ -1,5 +1,19 @@
 @extends('layouts.app')
 @section('content')
+@if (session('success-logout'))
+<script>
+    window.onload = function() {
+            alert('{{ session('success-logout') }}');
+        };
+</script>
+@endif
+@if (session('success-register'))
+<script>
+    window.onload = function() {
+            alert('{{ session('success-register') }}');
+        };
+</script>
+@endif
 
 <!-- Hero slider -->
 <section class="section-hero padding-b-100 next">
@@ -69,44 +83,51 @@
                             <div class="cr-product-card">
                                 <div class="cr-product-image">
                                     <div class="cr-image-inner zoom-image-hover">
-                                        <img src="{{ asset('uploads/Products Images/' . $items->image) }}" alt="product-1" height="250">
+                                        <img src="{{ asset('uploads/Products Images/' . $items->image) }}"
+                                            alt="product-1" height="250">
                                     </div>
 
 
                                 </div>
                                 <div class="cr-product-details">
                                     {{-- <div class="cr-brand">
-                                    <a href="{{ url('/shop') }}">{{ $items->model }}
-                                    <div class="cr-star">
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-line"></i>
-                                        <p>(4.5)</p>
-                                    </div>
+                                        <a href="{{ url('/shop') }}">{{ $items->model }}
+                                            <div class="cr-star">
+                                                <i class="ri-star-fill"></i>
+                                                <i class="ri-star-fill"></i>
+                                                <i class="ri-star-fill"></i>
+                                                <i class="ri-star-fill"></i>
+                                                <i class="ri-star-line"></i>
+                                                <p>(4.5)</p>
+                                            </div>
 
-                                </div> --}}
-                                <a href="{{ route('more.detail', ['id' => $items->id]) }}" class="title">{{ Illuminate\Support\Str::limit($items->name, 30) }}</a>
-                                <p class="cr-price"><span class="new-price">₹{{ $items->discounted_price }}</span>
-                                    <span class="old-price">₹{{ $items->price }}</span>
-                                </p>
+                                    </div> --}}
+                                    <a href="{{ route('more.detail', ['id' => $items->id]) }}" class="title">{{
+                                        Illuminate\Support\Str::limit($items->name, 30) }}</a>
+                                    <p class="cr-price"><span class="new-price">₹{{ $items->discounted_price }}</span>
+                                        <span class="old-price">₹{{ $items->price }}</span>
+                                    </p>
 
-                            </div>
+                                </div>
                         </a>
                         @if (Auth::user())
-                        <div class="cr-last-buttons mt-4 d-flex boder boder-dark gap-2 justify-content-center align-items-center">
-                            <a href="#" class="cr-button col-md-5 addToCartBtn" data-id="{{ $items->id }}" style="font-size: 10px">
+                        <div
+                            class="cr-last-buttons mt-4 d-flex boder boder-dark gap-2 justify-content-center align-items-center">
+                            <a class="cr-button col-md-5 addToCartBtn" data-id="{{ $items->id }}"
+                                style="font-size: 10px">
                                 Add Cart
                             </a>
-                            <a href="{{ route('buy.now', ['id' => $items->id]) }}" class="cr-button col-md-5" style="font-size: 10px">
+                            <a href="{{ route('buy.now', ['id' => $items->id]) }}" class="cr-button col-md-5"
+                                style="font-size: 10px">
                                 Buy now
                             </a>
                         </div>
                         </a>
                         @else
-                        <div class="cr-last-buttons mt-4 d-flex boder boder-dark gap-2 justify-content-center align-items-center">
-                            <a href="#" class="cr-button col-md-5 addToCartBtnWithoutLogin" style="font-size: 10px" data-id="{{ $items->id }}">
+                        <div
+                            class="cr-last-buttons mt-4 d-flex boder boder-dark gap-2 justify-content-center align-items-center">
+                            <a class="cr-button col-md-5 addToCartBtnWithoutLogin" style="font-size: 10px"
+                                data-id="{{ $items->id }}">
                                 Add cart
                             </a>
                             <a href="{{ url('/login') }}" class="cr-button col-md-5" style="font-size: 10px">
@@ -133,7 +154,8 @@
 
 <!-- Popular product -->
 @foreach ($sections as $currentSection)
-<section class="section-popular-product-shape padding-b-100" style="background-color: {{ $loop->iteration % 2 == 0 ? 'white' : '#f5f5f5' }}">
+<section class="section-popular-product-shape padding-b-100"
+    style="background-color: {{ $loop->iteration % 2 == 0 ? 'white' : '#f5f5f5' }}">
     <div class="container" data-aos="fade-up" data-aos-duration="2000">
         <div class="row">
             <div class="col-lg-12">
@@ -149,7 +171,8 @@
                                 <a href="{{ route('more.detail', ['id' => $product->id]) }}">
                                     <div class="cr-product-image">
                                         <div class="cr-image-inner zoom-image-hover">
-                                            <img src="{{ asset('uploads/Products Images/' . $product->image) }}" alt="product-1" height="250">
+                                            <img src="{{ asset('uploads/Products Images/' . $product->image) }}"
+                                                alt="product-1" height="250">
                                         </div>
                                     </div>
                                 </a>
@@ -165,23 +188,29 @@
                                             <p>(4.5)</p>
                                         </div>
                                     </div>
-                                    <a href="{{ route('more.detail', ['id' => $product->id]) }}" class="title">{{ Illuminate\Support\Str::limit($product->name, 30) }}</a>
+                                    <a href="{{ route('more.detail', ['id' => $product->id]) }}" class="title">{{
+                                        Illuminate\Support\Str::limit($product->name, 30) }}</a>
                                     <p class="cr-price"><span class="new-price">₹{{ $product->discounted_price }}</span>
                                         <span class="old-price">₹{{ $product->price }}</span>
                                     </p>
                                 </div>
                                 @if (Auth::user())
-                                <div class="cr-last-buttons mt-4 d-flex boder boder-dark gap-2 justify-content-center align-items-center">
-                                    <a href="#" class="cr-button col-md-5 addToCartBtn" data-id="{{ $product->id }}" style="font-size: 10px">
+                                <div
+                                    class="cr-last-buttons mt-4 d-flex boder boder-dark gap-2 justify-content-center align-items-center">
+                                    <a class="cr-button col-md-5 addToCartBtn" data-id="{{ $product->id }}"
+                                        style="font-size: 10px">
                                         Add Cart
                                     </a>
-                                    <a href="{{ route('buy.now', ['id' => $product->id]) }}" class="cr-button col-md-5" style="font-size: 10px">
+                                    <a href="{{ route('buy.now', ['id' => $product->id]) }}" class="cr-button col-md-5"
+                                        style="font-size: 10px">
                                         Buy now
                                     </a>
                                 </div>
                                 @else
-                                <div class="cr-last-buttons mt-4 d-flex boder boder-dark gap-2 justify-content-center align-items-center">
-                                    <a href="#" class="cr-button col-md-5 addToCartBtnWithoutLogin" style="font-size: 10px" data-id="{{ $product->id }}">
+                                <div
+                                    class="cr-last-buttons mt-4 d-flex boder boder-dark gap-2 justify-content-center align-items-center">
+                                    <a class="cr-button col-md-5 addToCartBtnWithoutLogin" style="font-size: 10px"
+                                        data-id="{{ $product->id }}">
                                         Add cart
                                     </a>
                                     <a href="{{ url('/login') }}" class="cr-button col-md-5" style="font-size: 10px">
@@ -213,7 +242,8 @@
                 <div class="cr-banner-slider swiper-container">
                     <div class="swiper-wrapper">
                         @foreach ($newbrand as $b)
-                        <div class="swiper-slide" data-aos="fade-up" data-aos-duration="2000" style="background-color: red">
+                        <div class="swiper-slide" data-aos="fade-up" data-aos-duration="2000"
+                            style="background-color: red">
                             <div class="cr-product-banner-image">
                                 <img src="{{ asset('img/product-banner/newoff.jpg') }}" alt="product-banner">
                                 <div class="cr-product-banner-contain">
@@ -310,7 +340,8 @@
             <div class="row">
                 <div class="col-12">
                     <div class="cr-deal-rightside">
-                        <div class="cr-deal-content" data-aos="fade-up" data-aos-duration="1000" style="background-color: rgb(255, 255, 255)">
+                        <div class="cr-deal-content" data-aos="fade-up" data-aos-duration="1000"
+                            style="background-color: rgb(255, 255, 255)">
                             <span><code>{{ $midbanner->discount }}%</code> OFF</span>
                             <h4 class="cr-deal-title" style="color: rgb(0, 0, 0);">{{ $midbanner->title }}</h4>
                             <p style="color: rgb(0, 0, 0);">{{ $midbanner->sub_title }}</p>
@@ -443,7 +474,9 @@
                                     <img src="{{ asset('uploads/Blog Images/' . $newblog->image) }}" alt="blog-2">
                                 </div>
                                 <div class="cr-blog-content">
-                                    <span><code>By {{ $newblog->written_by }}</code> | <a href="{{ route('blog.more.detail', ['id' => $newblog->id]) }}">{{ \Carbon\Carbon::parse($newblog->date)->format('d-m-Y') }}</a></span>
+                                    <span><code>By {{ $newblog->written_by }}</code> | <a
+                                            href="{{ route('blog.more.detail', ['id' => $newblog->id]) }}">{{
+                                            \Carbon\Carbon::parse($newblog->date)->format('d-m-Y') }}</a></span>
                                     <h5>{{ $newblog->title }}</h5>
                                     <a class="read" href="{{ route('blog.more.detail', ['id' => $newblog->id]) }}">Read
                                         More</a>

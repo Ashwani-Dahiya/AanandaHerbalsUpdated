@@ -342,8 +342,8 @@
                             <ul class="navbar-nav">
                                 <li class="nav-item dropdown">
                                     <a class="nav-link" href="#">
+                                        <span>Welcome {{ Auth::user()->username }}</span>
                                         <i class="ri-user-3-line"></i>
-                                        {{-- <span>{{ Auth::user()->username }}</span> --}}
                                     </a>
                                     <ul class="dropdown-menu">
                                         <li>

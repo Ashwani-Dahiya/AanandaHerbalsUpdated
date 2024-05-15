@@ -8,7 +8,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="cr-breadcrumb-title">
-                        <h2>Your Orders</h2>
+                        {{-- <h2>Your Orders</h2> --}}
                         <span> <a href="{{ route('home') }}">Home</a> - Orders</span>
                     </div>
                 </div>

@@ -35,7 +35,7 @@
                         <a href="{{ route('blog.more.detail', ['id' => $new->id]) }}">read more</a>
                     </div>
                     <div class="cr-blog-image">
-                        <img src="{{ asset('img/blog/blog.png') }}" alt="blog-1">
+                        <img src="{{ asset('uploads/Blog Images/'.$new->image) }}" alt="blog-1">
                     </div>
                 </div>
             </div>

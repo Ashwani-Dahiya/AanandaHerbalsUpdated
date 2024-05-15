@@ -165,7 +165,6 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="cr-breadcrumb-title">
-                        <h2>Update Profile</h2>
                         <span> <a href="{{ url('/') }}">Home</a> - Profile</span>
                     </div>
                 </div>

@@ -63,7 +63,7 @@
                     </div>
                     @if (Auth::user())
                     <div class="cr-last-buttons mt-4 d-flex boder boder-dark gap-2 justify-content-center align-items-center">
-                        <a href="#" class="cr-button col-md-5 addToCartBtn" data-id="{{ $newlist->id }}" style="font-size: 10px">
+                        <a  class="cr-button col-md-5 addToCartBtn" data-id="{{ $newlist->id }}" style="font-size: 10px">
                             Add Cart
                         </a>
                         <a href="{{ route('buy.now', ['id' => $newlist->id]) }}" class="cr-button col-md-5" style="font-size: 10px">
@@ -72,7 +72,7 @@
                     </div>
                     @else
                     <div class="cr-last-buttons mt-4 d-flex boder boder-dark gap-2 justify-content-center align-items-center">
-                        <a href="#" class="cr-button col-md-5 addToCartBtnWithoutLogin" style="font-size: 10px" data-id="{{ $newlist->id }}">
+                        <a  class="cr-button col-md-5 addToCartBtnWithoutLogin" style="font-size: 10px" data-id="{{ $newlist->id }}">
                             Add cart
                         </a>
                         <a href="{{ url('/login') }}" class="cr-button col-md-5" style="font-size: 10px">

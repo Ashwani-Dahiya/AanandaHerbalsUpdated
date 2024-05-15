@@ -167,7 +167,7 @@ $formattedValue = number_format($deliveryCharges, 2);
 
                                     <span class="cr-pay-option">
                                         <span>
-                                            <input type="radio" id="pay1" name="radio-group" value="cash_on_delivery">
+                                            <input type="radio" id="pay1" name="radio-group" value="cash_on_delivery" required>
                                             <label for="pay1">Cash On Delivery</label>
                                         </span>
                                     </span>
@@ -338,10 +338,10 @@ $formattedValue = number_format($deliveryCharges, 2);
 <!-- Checkout section End -->
 @else
 <script>
-    // Redirect to the home route after 3 seconds (3000 milliseconds)
+
     setTimeout(function() {
         window.location.href = "{{ route('home') }}";
-    }, 0); // Adjust the duration as needed (in milliseconds)
+    }, 0);
 
 </script>
 @endif
@@ -401,12 +401,16 @@ $formattedValue = number_format($deliveryCharges, 2);
                         var finalPrice = response.discounted_price;
                         $("#finalPrice").text(finalPrice);
                         $(".priceAfterOffer").val(finalPrice);
+                        $("#errorcoupanmsg").addClass('d-none');
+
                     } else {
                         $("#errorcoupanmsg").removeClass('d-none');
                     }
                 }
                 , error: function(xhr, status, error) {
                     console.error("Coupon application failed: " + error);
+                    $("#errorcoupanmsg").removeClass('d-none');
+
                 }
 
             });

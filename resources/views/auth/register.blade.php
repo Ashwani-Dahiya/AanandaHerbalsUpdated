@@ -9,7 +9,7 @@
                 <div class="col-lg-12">
                     <div class="cr-breadcrumb-title">
                         <h2>New Registration</h2>
-                        <span> <a href="{{ url('/') }}">Home</a> - Register</span>
+                        <span> <a href="{{ route('home') }}">Home</a> - Register</span>
                     </div>
                 </div>
             </div>
@@ -44,28 +44,18 @@
                         {{ Session::get('error') }}
                     </div>
                     @endif
-                    <form class="cr-content-form" method="POST" action="{{ route('register') }}">
+                    <form class="cr-content-form" method="POST" action="{{ route('register.post') }}">
                         @csrf
                         @method('POST')
                         <div class="row">
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
-                                    <label>First Name<span class="text-danger">*</span></label>
+                                    <label>Name<span class="text-danger">*</span></label>
                                     <input type="text" placeholder="Enter Your First Name" class="cr-form-control"
-                                        name="first_name" required>
+                                        name="name" required>
                                 </div>
-                                @if ($errors->has('first_name'))
-                                <p class="text-danger">{{ $errors->first('first_name') }}</p>
-                                @endif
-                            </div>
-                            <div class="col-12 col-sm-6">
-                                <div class="form-group">
-                                    <label>Last Name</label>
-                                    <input type="text" placeholder="Enter Your Last Name" class="cr-form-control"
-                                        name="last_name">
-                                </div>
-                                @if ($errors->has('last_name'))
-                                <p class="text-danger">{{ $errors->first('last_name') }}</p>
+                                @if ($errors->has('name'))
+                                <p class="text-danger">{{ $errors->first('name') }}</p>
                                 @endif
                             </div>
                             <div class="col-12 col-sm-6">
@@ -82,67 +72,12 @@
                                 <div class="form-group">
                                     <label>Phone Number<span class="text-danger">*</span></label>
                                     <input type="tel" placeholder="Enter Your phone number" class="cr-form-control"
-                                        name="phone_number" required>
+                                        name="phone" required>
                                 </div>
                                 @if ($errors->has('phone'))
                                 <p class="text-danger">{{ $errors->first('phone') }}</p>
                                 @endif
                             </div>
-                            {{-- <div class="col-12">
-                                <div class="form-group">
-                                    <label>Address<span class="text-danger">*</span></label>
-                                    <input type="text" placeholder="Address" class="cr-form-control" name="address"
-                                        required>
-                                </div>
-                                @if ($errors->has('address'))
-                                <p class="text-danger">{{ $errors->first('address') }}</p>
-                                @endif
-                            </div>
-                            <div class="col-12 col-sm-6">
-                                <div class="form-group">
-                                    <label>Country<span class="text-danger">*</span></label>
-                                    <input type="text" placeholder="Country" class="cr-form-control" name="country"
-                                        required>
-                                </div>
-                                @if ($errors->has('country'))
-                                <p class="text-danger">{{ $errors->first('country') }}</p>
-                                @endif
-                            </div>
-                            <div class="col-12 col-sm-6">
-                                <div class="form-group">
-                                    <label>Region State<span class="text-danger">*</span></label>
-                                    <select class="cr-form-control" aria-label="Default select example" name="state" required>
-                                        <option selected>Choose ...</option>
-                                        @foreach ($states as $state)
-                                            <option value="{{ $state->id }}">{{ $state->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                @if ($errors->has('state'))
-                                    <p class="text-danger">{{ $errors->first('state') }}</p>
-                                @endif
-                            </div>
-                            <div class="col-12 col-sm-6">
-                                <div class="form-group">
-                                    <label>City<span class="text-danger">*</span></label>
-                                    <select class="cr-form-control" aria-label="Default select example" name="city" required>
-                                        <option selected>Choose ...</option>
-                                    </select>
-                                </div>
-                                @if ($errors->has('city'))
-                                    <p class="text-danger">{{ $errors->first('city') }}</p>
-                                @endif
-                            </div>
-                            <div class="col-12 col-sm-6">
-                                <div class="form-group">
-                                    <label>Post Code<span class="text-danger">*</span></label>
-                                    <input type="number" placeholder="Post Code" class="cr-form-control"
-                                        name="post_code" required>
-                                </div>
-                                @if ($errors->has('post_code'))
-                                <p class="text-danger">{{ $errors->first('post_code') }}</p>
-                                @endif
-                            </div> --}}
                             <div class="col-12 col-sm-6">
                                 <div class="form-group">
                                     <label>Password<span class="text-danger">*</span></label>

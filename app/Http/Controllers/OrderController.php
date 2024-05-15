@@ -195,7 +195,7 @@ class OrderController extends Controller
             if ($add) {
                 $addressId = AddressModel::latest()->first()->id;
                 $currentDateTime = Carbon::now();
-                $estimateDate = $currentDateTime->addDays(7)->toDateString();
+                $estimateDate = $currentDateTime->addDays(5)->toDateString();
 
                 // Create order number
                 $orderNumPrefix = "ORD0000";
@@ -302,7 +302,7 @@ class OrderController extends Controller
         if ($user_id === Auth::user()->id) {
             return view('thankyoupage')->with('order_id', $order->order_num);
         } else
-            $nothing = "Nothing";
+            $nothing = $order->order_num;
         return view('thankyoupage')->with('order_id', $nothing);
     }
     public function user_cancel_order(Request $request, $id)

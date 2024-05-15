@@ -167,7 +167,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="cr-breadcrumb-title">
-                        <h2>Profile</h2>
+                        {{-- <h2>Profile</h2> --}}
                         <span> <a href="index.php">Home</a> - Profile</span>
                     </div>
                 </div>

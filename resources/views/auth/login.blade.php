@@ -120,14 +120,14 @@
 
             $.ajax({
                 type: "POST"
-                , url: "{{ route('login') }}"
+                , url: "{{ route('login.post') }}"
                 , data: formData
                 , contentType: false
                 , processData: false
                 , success: function(response) {
                     if (response.status) {
                         // Redirect to home page
-                        window.location.href = "{{ route('login') }}";
+                        window.location.href = "{{ route('home') }}";
                     } else {
                         // Display error message in the specified div
                         $message.text(response.msg || 'Invalid credentials. Please try again.');

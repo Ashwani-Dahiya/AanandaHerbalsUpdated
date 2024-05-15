@@ -85,9 +85,9 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-3 col-12 md-30" data-aos="fade-up" data-aos-duration="2000" data-aos-delay="400">
+            {{-- <div class="col-lg-3 col-12 md-30" data-aos="fade-up" data-aos-duration="2000" data-aos-delay="400">
                 <div class="cr-shop-sideview">
-                    {{-- <div class="cr-shop-categories">
+                    <div class="cr-shop-categories">
                         <h4 class="cr-shop-sub-title">Category</h4>
                         <div class="cr-checkbox">
                             <div class="checkbox-group">
@@ -106,7 +106,7 @@
                                 <span>[64]</span>
                             </div>
                         </div>
-                    </div> --}}
+                    </div>
                     <div class="cr-shop-price">
                         <h4 class="cr-shop-sub-title">By Price</h4>
                         <div class="price-range-slider">
@@ -130,7 +130,7 @@
 
                         </div>
                     </div>
-                    {{-- <div class="cr-shop-color">
+                    <div class="cr-shop-color">
                         <h4 class="cr-shop-sub-title">Colors</h4>
                         <div class="cr-checkbox">
                             <div class="checkbox-group">
@@ -149,8 +149,8 @@
                                 <span class="red"></span>
                             </div>
                         </div>
-                    </div> --}}
-                    {{-- <div class="cr-shop-weight">
+                    </div>
+                    <div class="cr-shop-weight">
                         <h4 class="cr-shop-sub-title">Weight</h4>
                         <div class="cr-checkbox">
                             <div class="checkbox-group">
@@ -166,10 +166,10 @@
                                 <label for="30kg">30kg pack</label>
                             </div>
                         </div>
-                    </div> --}}
+                    </div>
                 </div>
-            </div>
-            <div class="col-lg-9 col-12 md-30" data-aos="fade-up" data-aos-duration="2000" data-aos-delay="600">
+            </div> --}}
+            <div class="col-lg-12 col-12 md-30" data-aos="fade-up" data-aos-duration="2000" data-aos-delay="600">
                 <div class="row">
                     <div class="col-12">
                         <div class="cr-shop-bredekamp">
@@ -198,7 +198,7 @@
                 <div class="row col-100 mb-minus-24">
                     @foreach ($list as $newlist)
 
-                    <div class="col-xxl-3 col-xl-4 col-6 cr-product-box mb-24">
+                    <div class="col-xxl-3 col-xl-3 col-6 cr-product-box mb-24">
                         <div class="cr-product-card">
                             <a href="{{ route('more.detail', ['id' => $newlist->id]) }}">
                                 <div class="cr-product-image">
@@ -223,7 +223,7 @@
                                 <p class="cr-price"><span class="new-price">₹{{ $newlist->discounted_price }}</span> <span class="old-price">₹{{ $newlist->price }}</span></p>
                                 @if (Auth::user())
                                 <div class="cr-last-buttons mt-4 d-flex boder boder-dark gap-2 justify-content-center align-items-center">
-                                    <a href="#" class="cr-button col-md-5 addToCartBtn" data-id="{{ $newlist->id }}" style="font-size: 10px">
+                                    <a  class="cr-button col-md-5 addToCartBtn" data-id="{{ $newlist->id }}" style="font-size: 10px">
                                         Add Cart
                                     </a>
                                     <a href="{{ route('buy.now', ['id' => $newlist->id]) }}" class="cr-button col-md-5" style="font-size: 10px">
@@ -232,7 +232,7 @@
                                 </div>
                                 @else
                                 <div class="cr-last-buttons mt-4 d-flex boder boder-dark gap-2 justify-content-center align-items-center">
-                                    <a href="#" class="cr-button col-md-5 addToCartBtnWithoutLogin" style="font-size: 10px" data-id="{{ $newlist->id }}">
+                                    <a  class="cr-button col-md-5 addToCartBtnWithoutLogin" style="font-size: 10px" data-id="{{ $newlist->id }}">
                                         Add cart
                                     </a>
                                     <a href="{{ url('/login') }}" class="cr-button col-md-5" style="font-size: 10px">

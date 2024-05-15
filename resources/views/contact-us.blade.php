@@ -40,8 +40,9 @@
                     </div>
                     <div class="cr-info-content">
                         <h4 class="heading">Contact</h4>
-                        <p><a href="javascript:void(0)"><i class="ri-phone-line"></i> &nbsp; {{ $comp_mob }}</a></p>
-                        <p><a href="javascript:void(0)"><i class="ri-phone-line"></i> &nbsp; {{ $comp_mob1 }}</a>
+                        <p><a href="tel:{{ $comp_mob }}"><i class="ri-phone-line"></i> &nbsp; {{ $comp_mob }}</a>
+                        </p>
+                        <p><a href="tel:{{ $comp_mob1 }}"><i class="ri-phone-line"></i> &nbsp; {{ $comp_mob1 }}</a>
                         </p>
                     </div>
                 </div>
@@ -53,9 +54,9 @@
                     </div>
                     <div class="cr-info-content">
                         <h4 class="heading">Mail & Website</h4>
-                        <p><a href="javascript:void(0)"><i class="ri-mail-line"></i> &nbsp;
-                                mail.{{ $comp_email }}</a></p>
-                        <p><a href="javascript:void(0)"><i class="ri-globe-line"></i> &nbsp; {{ $comp_web }}</a>
+                        <p><a href="mailto:{{ $comp_email }}"><i class="ri-mail-line"></i> &nbsp; mail.{{ $comp_email }}</a>
+                        </p>
+                        <p><a href="{{ $comp_web }}"><i class="ri-globe-line"></i> &nbsp; {{ $comp_web }}</a>
                         </p>
                     </div>
                 </div>

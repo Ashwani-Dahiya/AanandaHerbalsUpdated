@@ -32,7 +32,7 @@
                         <p>{{ $data->long_about }}</p>
                     </div>
                     <div class="cr-blog-image">
-                        <img src="{{ asset('img/blog/blog-1.jpg') }}" alt="blog-1">
+                        <img src="{{ asset('uploads/Blog Images/'.$data->image)}}" alt="blog-1">
                     </div>
                 </div>
             </div>

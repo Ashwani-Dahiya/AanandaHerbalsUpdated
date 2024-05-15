@@ -1,11 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-@if (session('success'))
-<div class="alert alert-success">
-    {{ session('success') }}
-</div>
-@endif
+
 
 @if (session('error'))
 <div class="alert alert-danger">
@@ -21,8 +17,8 @@ $totalPrice=0;
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="cr-breadcrumb-title">
-                        <h2>Cart</h2>
+                    <div class="cr-breadcrumb-title mt-2">
+                        {{-- <h2>Cart</h2> --}}
                         <span><a href="{{ route('home') }}">Home</a> / Cart</span>
                     </div>
                 </div>
@@ -74,20 +70,26 @@ $totalPrice=0;
                                     @if($cart->product)
                                     <td class="cr-cart-name">
                                         <a href="{{ route('more.detail',['id'=>$cart->product->id]) }}">
-                                            <img src="{{ asset('uploads/Products Images/'.$cart->product->image) }}" alt="product-1" class="cr-cart-img">
+                                            <img src="{{ asset('uploads/Products Images/'.$cart->product->image) }}"
+                                                alt="product-1" class="cr-cart-img">
                                         </a>
                                     </td>
                                     <td class="cr-cart-name">{{ $cart->product->name }}</td>
                                     <td class="cr-cart-price"><span>{{ $cart->product->model }}</span></td>
-                                    <td class="cr-cart-price"><span class="amount">₹{{ $cart->product->discounted_price }}</span></td>
+                                    <td class="cr-cart-price"><span class="amount">₹{{ $cart->product->discounted_price
+                                            }}</span></td>
                                     <td class="cr-cart-qty">
                                         <div class="cart-qty-plus-minus">
-                                            <button type="button" class="newminus" data-cart-id="{{ $cart->id }}" data-product-id="{{ $cart->product->id }}">-</button>
-                                            <input type="text" id="quantity_{{ $cart->id }}" value="{{ $cart->times }}" readonly>
-                                            <button type="button" class="newplus" data-cart-id="{{ $cart->id }}" data-product-id="{{ $cart->product->id }}">+</button>
+                                            <button type="button" class="newminus" data-cart-id="{{ $cart->id }}"
+                                                data-product-id="{{ $cart->product->id }}">-</button>
+                                            <input type="text" id="quantity_{{ $cart->id }}" value="{{ $cart->times }}"
+                                                readonly>
+                                            <button type="button" class="newplus" data-cart-id="{{ $cart->id }}"
+                                                data-product-id="{{ $cart->product->id }}">+</button>
                                         </div>
                                     </td>
-                                    <td class="cr-cart-subtotal" id="subtotal_{{ $cart->id }}">₹{{ $cart->times * $cart->product->discounted_price }}</td>
+                                    <td class="cr-cart-subtotal" id="subtotal_{{ $cart->id }}">₹{{ $cart->times *
+                                        $cart->product->discounted_price }}</td>
                                     <td class="cr-cart-remove">
                                         <a href="{{ route('delete.card.item', ['id' => $cart->id]) }}">
                                             <i class="ri-delete-bin-line"></i>
@@ -111,7 +113,7 @@ $totalPrice=0;
                             <div class="cr-cart-update-bottom">
                                 <a href="{{ route('home') }}" class="cr-links">Continue Shopping</a>
 
-                                <h6 class="cr-cart-total" id="hideen">Final Price: ₹ {{ $totalPrice  }}</h6>
+                                <h6 class="cr-cart-total" id="hideen">Final Price: ₹ {{ $totalPrice }}</h6>
                                 <h6 class="cr-cart-total d-none" id="finalprice"></h6>
                                 <a href="{{ route('checkout.page') }}" class="cr-button" id="checkoutBtn">Check Out</a>
                             </div>
@@ -157,43 +159,49 @@ $totalPrice=0;
                             <div class="cr-product-card">
                                 <div class="cr-product-image">
                                     <div class="cr-image-inner zoom-image-hover">
-                                        <img src="{{ asset('uploads/Products Images/' . $items->image) }}" alt="product-1" height="220">
+                                        <img src="{{ asset('uploads/Products Images/' . $items->image) }}"
+                                            alt="product-1" height="220">
                                     </div>
 
 
                                 </div>
                                 <div class="cr-product-details">
                                     {{-- <div class="cr-brand">
-                                    <a href="{{ url('/shop') }}">{{ $items->model }}
-                                    <div class="cr-star">
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-fill"></i>
-                                        <i class="ri-star-line"></i>
-                                        <p>(4.5)</p>
-                                    </div>
+                                        <a href="{{ url('/shop') }}">{{ $items->model }}
+                                            <div class="cr-star">
+                                                <i class="ri-star-fill"></i>
+                                                <i class="ri-star-fill"></i>
+                                                <i class="ri-star-fill"></i>
+                                                <i class="ri-star-fill"></i>
+                                                <i class="ri-star-line"></i>
+                                                <p>(4.5)</p>
+                                            </div>
 
-                                </div> --}}
-                                <a href="{{ route('more.detail', ['id' => $items->id]) }}" class="title">{{ Illuminate\Support\Str::limit($items->name, 30) }}</a>
-                                <p class="cr-price"><span class="new-price">₹{{ $items->discounted_price }}</span>
-                                    <span class="old-price">₹{{ $items->price }}</span>
-                                </p>
+                                    </div> --}}
+                                    <a href="{{ route('more.detail', ['id' => $items->id]) }}" class="title">{{
+                                        Illuminate\Support\Str::limit($items->name, 30) }}</a>
+                                    <p class="cr-price"><span class="new-price">₹{{ $items->discounted_price }}</span>
+                                        <span class="old-price">₹{{ $items->price }}</span>
+                                    </p>
 
-                            </div>
+                                </div>
                         </a>
                         @if (Auth::user())
-                        <div class="cr-last-buttons mt-4 d-flex boder boder-dark gap-2 justify-content-center align-items-center">
-                            <a href="#" class="cr-button col-md-5 addToCartBtn" data-id="{{ $items->id }}" style="font-size: 10px">
+                        <div
+                            class="cr-last-buttons mt-4 d-flex boder boder-dark gap-2 justify-content-center align-items-center">
+                            <a class="cr-button col-md-5 addToCartBtn" data-id="{{ $items->id }}"
+                                style="font-size: 10px">
                                 Add Cart
                             </a>
-                            <a href="{{ route('buy.now', ['id' => $items->id]) }}" class="cr-button col-md-5" style="font-size: 10px">
+                            <a href="{{ route('buy.now', ['id' => $items->id]) }}" class="cr-button col-md-5"
+                                style="font-size: 10px">
                                 Buy now
                             </a>
                         </div>
                         </a>
                         @else
-                        <div class="cr-last-buttons mt-4 d-flex boder boder-dark gap-2 justify-content-center align-items-center">
+                        <div
+                            class="cr-last-buttons mt-4 d-flex boder boder-dark gap-2 justify-content-center align-items-center">
                             <a href="{{ url('/login') }}" class="cr-button col-md-5" style="font-size: 10px">
                                 Add cart
                             </a>

@@ -48,7 +48,7 @@
                      </h4>
                      <ul class="cr-footer-links cr-footer-dropdown">
                          <li><a href="{{ route('about.page') }}">About Us</a></li>
-                         <li><a href="{{ route('contact.us') }}">contact Us</a></li>
+                         <li><a href="{{ route('contact.us') }}">Contact Us</a></li>
                          <li><a href="#">Delivery Information</a></li>
                          <li><a href="{{ route('privacy.policy.page') }}">Privacy Policy</a></li>
                          <li><a href="{{ route('terms.conditions.page') }}">Terms & Conditions</a></li>

@@ -27,26 +27,27 @@ $totalPrice=0;
 
 <section class="bg-light my-5 p-4">
     <div class="container">
-        @if(!empty($products))
+        @isset($carts)
+        @if($carts->isNotEmpty())
         <div class="row">
             <!-- cart -->
             <div class="col-lg-9">
                 <div class="card border shadow-0">
                     <div class="m-4">
                         <h4 class="card-title mb-4">Your shopping cart</h4>
-                        @foreach ($products as $product)
-
+                        @foreach ($carts as $cart)
+                        @if($cart->product)
                         <div class="row gy-3 mb-4">
                             <div class="col-lg-5">
                                 <div class="me-lg-5">
                                     <div class="d-flex">
-                                        <a href="{{ route('more.detail',['id'=>$product['id']]) }}"><img
-                                                src="{{ asset('uploads/Products Images/'.$product['image']) }}"
+                                        <a href="{{ route('more.detail',['id'=>$cart->product->id]) }}"><img
+                                                src="{{ asset('uploads/Products Images/'.$cart->product->image) }}"
                                                 class="border rounded me-3" style="width: 96px; height: 96px;" /></a>
                                         <div class="">
-                                            <a href="{{ route('more.detail',['id'=>$product['id']]) }}"
-                                                class="nav-link">{{ $product['name'] }}</a>
-                                            <p class="text-muted">{{ $product['model'] }}</p>
+                                            <a href="{{ route('more.detail',['id'=>$cart->product->id]) }}"
+                                                class="nav-link">{{ $cart->product->name }}</a>
+                                            <p class="text-muted">{{ $cart->product->model }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -54,37 +55,41 @@ $totalPrice=0;
                             <div class="col-lg-2 col-sm-6 col-6 d-flex flex-row flex-lg-column flex-xl-row text-nowrap">
                                 <div class="" style="margin-right: 20px">
                                     <div class="cart-qty-plus-minus">
-                                        <button type="button" class="newminusoutlogin" data-cart-id="{{ $product['id'] }}"
-                                            data-product-id="{{ $product['id'] }}">-</button>
-                                        <input type="text" id="quantity_{{ $product['id'] }}"
-                                            value="{{ $product['quantity'] }}" readonly>
-                                        <button type="button" class="newplusoutlogin" data-cart-id="{{ $product['id'] }}"
-                                            data-product-id="{{ $product['id'] }}">+</button>
+                                        <!-- Minus Button -->
+                                        <button type="button" class="newminus" data-cart-id="{{ $cart->id }}"
+                                            data-product-id="{{ $cart->product->id }}">-</button>
+
+                                        <!-- Input Field to Display Quantity -->
+                                        <input type="text" id="quantity_{{ $cart->id }}" value="{{ $cart->times }}" readonly>
+
+                                        <!-- Plus Button -->
+                                        <button type="button" class="newplus" data-cart-id="{{ $cart->id }}"
+                                            data-product-id="{{ $cart->product->id }}">+</button>
                                     </div>
                                 </div>
+
                                 <div class="">
-                                    <text class="h6 cr-cart-subtotal" id="subtotal_{{ $product['id'] }}">₹{{
-                                        $product['quantity'] *
-                                        $product['discounted_price'] }}</text>
+                                    <text class="h6 cr-cart-subtotal" id="subtotal_{{ $cart->id }}">₹{{ $cart->times * $cart->product->discounted_price }}</text>
                                     <br />
                                     <small class="text-muted text-nowrap">
-                                        ₹{{ $product['discounted_price'] }} / per
+                                        ₹{{ $cart->product->discounted_price }} / per
                                         item </small>
                                 </div>
                             </div>
                             <div class=" col-lg col-sm-6 d-flex justify-content-sm-center justify-content-md-start
                                         justify-content-lg-center justify-content-xl-end mb-2">
                                 <div class="float-md-end">
-                                    <a href="{{ route('delete.cookie.item', ['id' => $product['id']]) }}"
-                                        class="btn btn-light border text-danger icon-hover-danger"> <i
-                                            class="ri-delete-bin-line"></i></a>
+                                    <a href="{{ route('delete.card.item', ['id' => $cart->id]) }}"
+                                        class="btn btn-light border text-danger icon-hover-danger">  <i class="ri-delete-bin-line"></i></a>
                                 </div>
                             </div>
                         </div>
                         @php
-                        $totalPrice += $product['quantity'] * $product['discounted_price'];
+                        $totalPrice += $cart->times * $cart->product->discounted_price;
                         @endphp
-
+                        @else
+                        <td colspan="7">Product not found</td>
+                        @endif
                         @endforeach
 
                     </div>
@@ -118,19 +123,16 @@ $totalPrice=0;
         @else
         <div class="row">
             <div class="col-lg-12">
-                <h6 class="display-6">No items in the cart</h6>
-                <div class="cr-cart-update-bottom d-flex justify-content-end">
-                    <a href="https://myayushkart.com/home" class="cr-links">Continue Shopping</a>
-                </div>
+                <p>No items in the cart</p>
             </div>
         </div>
-    @endif
+        @endif
     </div>
 </section>
 <!-- cart + summary -->
 
 <!-- Recommended -->
-{{-- <div id="cart-url" data-url="{{ url('/cart') }}"></div>
+<div id="cart-url" data-url="{{ url('/cart') }}"></div>
 <section class="section-popular-product-shape padding-b-100">
     <div class="container" data-aos="fade-up" data-aos-duration="2000">
         <div class="row">
@@ -191,21 +193,30 @@ $totalPrice=0;
                     </div>
                 </div>
                 @endforeach
+                {{-- {{ $item->links('pagination::bootstrap-5') }} --}}
             </div>
         </div>
     </div>
-
+    @else
+    <div class="row">
+        <div class="col-lg-12">
+            <h6 class="display-6">No items in the cart</h6>
+            <div class="cr-cart-update-bottom d-flex justify-content-end">
+                <a href="{{ route('home') }}" class="cr-links">Continue Shopping</a>
+            </div>
+        </div>
     </div>
-</section> --}}
+    @endisset
+    </div>
+</section>
 
 <script>
-   $(document).ready(function() {
-        $(".newplusoutlogin, .newminusoutlogin").click(function() {
+    $(document).ready(function() {
+        $(".newplus, .newminus").click(function() {
             var element = $(this);
             var cartId = $(this).data("cart-id");
             var productId = $(this).data("product-id");
-            var increment = $(this).hasClass("newplusoutlogin") ? 1 : -1;
-
+            var increment = $(this).hasClass("newplus") ? 1 : -1;
 
             // Add CSRF token to headers
             $.ajaxSetup({
@@ -216,19 +227,17 @@ $totalPrice=0;
 
             // AJAX request
             $.ajax({
-                url: "{{ route('cart.update.quantity.withoutlogin') }}"
+                url: "{{ route('cart.update.quantity') }}"
                 , type: 'put'
                 , dataType: 'json'
                 , data: {
-
-                     product_id: productId
+                    cart_id: productId
+                    , product_id: productId
                     , increment: increment
                 , }
                 , success: function(response) {
                     // Handle successful response
-                    console.log(response );
-                    console.log(increment );
-
+                    console.log(response);
 
                     // Check if the update was successful
                     if (response.success) {

@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('content')
-
 <style>
     body {
         background: rgb(205, 238, 216);
@@ -47,7 +46,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="cr-breadcrumb-title">
-                        <h2>Update Profile</h2>
+                        {{-- <h2>Update Profile</h2> --}}
                         <span> <a href="{{ url('/') }}">Home</a> - Profile</span>
                     </div>
                 </div>
@@ -71,24 +70,24 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="row">
             <form action="{{ route('profile.update.data') }}" method="POST">
                 @csrf
                 @method('POST')
 
-            <div class="container rounded bg-white mt-5 mb-5">
-                <div class="row">
-                    <div class="col-md-4 border-right">
+                <div class="container rounded bg-white mt-5 mb-5">
+                    <div class="row">
+                        <div class="col-md-4 border-right">
 
-                        <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img
-                                class="rounded-circle mt-5" width="150px"
-                                src="https://img.icons8.com/bubbles/100/000000/user.png"><span
-                                class="font-weight-bold">{{ $record->first_name }}
-                                {{ $record->last_name }}
-                            </span><span class="text-black-50">{{ $record->email }}</span><span> </span></div>
+                            <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img
+                                    class="rounded-circle mt-5" width="150px"
+                                    src="https://img.icons8.com/bubbles/100/000000/user.png"><span
+                                    class="font-weight-bold">{{ $record->first_name }}
+                                    {{ $record->last_name }}
+                                </span><span class="text-black-50">{{ $record->email }}</span><span> </span></div>
 
-                    </div>
+                        </div>
 
                         <div class="col-md-7 border-right">
                             <div class="p-3 py-5">
@@ -121,25 +120,29 @@
                                     <div class="col-md-6"><label class="labels">Country</label><select name="country"
                                             id="" class="form-control">
                                             <option selected>{{ $record->country }}</option>
-                                            <option value="">India</option>
+                                            <option value="India">India</option>
                                         </select></div>
-                                    <div class="col-md-6"><label class="labels">State</label>
-                                        <select name="state" id="" class="form-control">
-                                            <option selected>{{ $record->state }}</option>
-                                            @foreach ($states as $state )
-                                            <option value="{{ $state->name }}">{{ $state->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="col-md-12"><label class="labels">City</label><select name="city" id=""
-                                            class="form-control">
-                                            <option selected>{{ $record->city }}</option>
-                                            @foreach ($states as $state)
-                                            @foreach ($state->cities as $city)
-                                            <option value="{{ $city->city }}">{{ $city->city }}</option>
-                                            @endforeach
-                                            @endforeach
-                                        </select></div>
+                                        <div class="col-md-6">
+                                            <label class="labels">State</label>
+                                            <select name="state" id="state-select" class="form-control">
+                                                <option selected value="{{ $record->state }}">{{ $record->state }}</option>
+                                                @foreach ($states as $state)
+                                                <option value="{{ $state->id }}">{{ $state->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+
+                                        <div class="col-md-12">
+                                            <label class="labels">City</label>
+                                            <select name="city" id="city-select" class="form-control">
+                                                <option selected>{{ $record->city }}</option>
+                                                @foreach ($states as $state)
+                                                @foreach ($state->cities as $city)
+                                                <option value="{{ $city->id }}">{{ $city->city }}</option>
+                                                @endforeach
+                                                @endforeach
+                                            </select>
+                                        </div>
                                 </div>
                                 <div class="col-md-12"><label class="labels">Postcode</label><input type="text"
                                         class="form-control" name="post_code" placeholder="enter postcode"
@@ -148,18 +151,39 @@
                                 <div class="mt-5 text-center">
                                     <input type="submit" class="btn btn-success profile-button" value="Update">
                                 </div>
-                            </form>
-                            </div>
-                        </div>
-
-                </div>
-            </div>
-
+            </form>
         </div>
+    </div>
+
+    </div>
+    </div>
+
+    </div>
     </div>
 </section>
 
-
-
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#state-select').on('change', function() {
+            var stateId = $(this).val();
+            if (stateId) {
+                $.ajax({
+                    url: '/get-cities/' + stateId,
+                    type: "GET",
+                    dataType: "json",
+                    success: function(data) {
+                        $('#city-select').empty();
+                        $.each(data, function(key, value) {
+                            $('#city-select').append('<option value="' +
+                                value.city + '">' + value.city + '</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#city-select').empty();
+            }
+        });
+    });
+</script>
 @endsection
